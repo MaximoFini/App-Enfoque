@@ -10,7 +10,9 @@ Estilos: Google Stitch (codigos HTML pegados en /interfaces)
 Logica: archivo map.md cargado en la raiz con la planificacion de Claude (prompting) separado por faseo
 Modelo usado para conectar todo: Sonnet 4.5/Opus 4.5 (12% de uso de github copilot del mes)
 
-# Link a deploy en Vercel
+# Link app
+
+https://app-enfoque.vercel.app/login
 
 ## 📦 Instalación
 
