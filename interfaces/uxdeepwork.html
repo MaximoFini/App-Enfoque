@@ -1,0 +1,511 @@
+<html class="dark" lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Sesión de Enfoque con Temporizador Circular y Eje Y</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#7f13ec",
+              "background-light": "#f7f6f8",
+              "background-dark": "#191022",
+              "surface-dark": "#251b2e",
+              "surface-active": "#3a2a47",
+            },
+            fontFamily: {
+              display: ["Inter", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "0.25rem",
+              lg: "0.5rem",
+              xl: "0.75rem",
+              "2xl": "1rem",
+              full: "9999px",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #191022;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #3a2a47;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #4f3b61;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display overflow-hidden"
+  >
+    <div
+      class="relative flex h-screen w-full bg-background-light dark:bg-background-dark overflow-hidden"
+    >
+      <div
+        class="hidden md:flex flex-col w-72 border-r border-white/5 bg-[#141118] h-full justify-between p-4"
+      >
+        <div class="flex flex-col gap-8">
+          <div
+            class="flex gap-3 items-center p-2 rounded-xl hover:bg-white/5 transition-colors cursor-pointer"
+          >
+            <div
+              class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-12 ring-2 ring-primary/20"
+              style="
+                background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuCMJCbJaZuL7TPx5HkgN3dWBLfJkkZOtoAemUJ5TLc1OVGni-FRuxP5pzcfiumClgOxJdV-vpn-SQK0Uc691f0nmFPTDEp7jjlgn58sDZjxRcg65q3w072q-d-9XnE_1bF62bZLH4qWLNPx4fBq4BbOjHMiBsbrLC1tyaiblipRdfIEel-LzDaB5R_i0WXn5yoWNCfky26x0CNkbVA0nnogiKpM3ZATWe8jMTkeleb-3nYvilc4hamIsO29XEZAeNgQnuO8V04ib4qB&quot;);
+              "
+            ></div>
+            <div class="flex flex-col">
+              <p class="text-[#ab9db9] text-xs font-normal">Miembro Pro</p>
+            </div>
+          </div>
+          <div class="flex flex-col gap-2">
+            <div
+              class="flex items-center gap-3 px-4 py-3 rounded-xl text-[#ab9db9] hover:bg-surface-active/50 hover:text-white transition-all cursor-pointer group"
+            >
+              <span
+                class="material-symbols-outlined text-2xl group-hover:scale-110 transition-transform"
+                >calendar_today</span
+              >
+              <p class="text-sm font-medium leading-normal">Calendario</p>
+            </div>
+            <div
+              class="flex items-center gap-3 px-4 py-3 rounded-xl text-[#ab9db9] hover:bg-surface-active/50 hover:text-white transition-all cursor-pointer group"
+            >
+              <span
+                class="material-symbols-outlined text-2xl group-hover:scale-110 transition-transform"
+                >timer</span
+              >
+              <p class="text-sm font-medium leading-normal">Pomodoro</p>
+            </div>
+            <div
+              class="flex items-center gap-3 px-4 py-3 rounded-xl text-[#ab9db9] hover:bg-surface-active/50 hover:text-white transition-all cursor-pointer group"
+            >
+              <span
+                class="material-symbols-outlined text-2xl group-hover:scale-110 transition-transform"
+                >task_alt</span
+              >
+              <p class="text-sm font-medium leading-normal">Tareas</p>
+            </div>
+            <div
+              class="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/20 border border-primary/10 text-white cursor-pointer shadow-[0_0_15px_rgba(127,19,236,0.15)]"
+            >
+              <span class="material-symbols-outlined text-2xl fill-1"
+                >track_changes</span
+              >
+              <p class="text-sm font-medium leading-normal">Enfoque</p>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-col gap-4 p-2">
+          <div class="h-px w-full bg-white/10"></div>
+          <button
+            class="flex items-center gap-3 px-2 text-[#ab9db9] hover:text-red-400 transition-colors"
+          >
+            <span class="material-symbols-outlined text-xl">logout</span>
+            <span class="text-sm font-medium">Cerrar Sesión</span>
+          </button>
+        </div>
+      </div>
+      <div class="flex-1 flex flex-col h-full overflow-y-auto relative">
+        <div
+          class="absolute top-0 left-0 w-full h-64 bg-gradient-to-b from-primary/10 to-transparent pointer-events-none"
+        ></div>
+        <div
+          class="flex-1 flex flex-col max-w-5xl mx-auto w-full p-6 md:p-12 gap-8 z-10"
+        >
+          <div
+            class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6"
+          >
+            <div class="flex flex-col gap-2">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary text-3xl"
+                  >bolt</span
+                >
+                <h1
+                  class="text-white text-3xl md:text-4xl font-black tracking-tight"
+                >
+                  Sesión de Enfoque
+                </h1>
+              </div>
+              <p class="text-[#ab9db9] text-base font-normal">
+                Entra en estado de flujo y mide tu concentración.
+              </p>
+            </div>
+            <div
+              class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/10 border border-green-500/20"
+            >
+              <div
+                class="w-2 h-2 rounded-full bg-green-500 animate-pulse"
+              ></div>
+              <span
+                class="text-green-500 text-xs font-bold uppercase tracking-wider"
+                >Sesión Activa</span
+              >
+            </div>
+          </div>
+          <div
+            class="flex flex-col items-center justify-center grow gap-10 py-4"
+          >
+            <div
+              class="bg-surface-dark p-1.5 rounded-2xl inline-flex shadow-lg shadow-black/20 border border-white/5"
+            >
+              <label class="cursor-pointer relative">
+                <input
+                  checked=""
+                  class="peer sr-only"
+                  name="mode"
+                  type="radio"
+                  value="deep"
+                />
+                <div
+                  class="flex items-center gap-2 px-6 py-2.5 rounded-xl transition-all duration-300 peer-checked:bg-primary peer-checked:text-white peer-checked:shadow-lg text-[#ab9db9] hover:text-white"
+                >
+                  <span class="material-symbols-outlined text-[20px]"
+                    >psychology</span
+                  >
+                  <span class="text-sm font-semibold">Trabajo Profundo</span>
+                </div>
+              </label>
+              <label class="cursor-pointer relative">
+                <input
+                  class="peer sr-only"
+                  name="mode"
+                  type="radio"
+                  value="shallow"
+                />
+                <div
+                  class="flex items-center gap-2 px-6 py-2.5 rounded-xl transition-all duration-300 peer-checked:bg-primary peer-checked:text-white peer-checked:shadow-lg text-[#ab9db9] hover:text-white"
+                >
+                  <span class="material-symbols-outlined text-[20px]"
+                    >check_circle</span
+                  >
+                  <span class="text-sm font-semibold">Trabajo Ligero</span>
+                </div>
+              </label>
+            </div>
+            <div class="relative group my-4">
+              <div
+                class="absolute inset-0 bg-primary/20 blur-[60px] rounded-full opacity-40 group-hover:opacity-60 transition-opacity duration-700"
+              ></div>
+              <div
+                class="relative w-72 h-72 md:w-80 md:h-80 flex items-center justify-center"
+              >
+                <svg
+                  class="w-full h-full -rotate-90 transform"
+                  viewBox="0 0 100 100"
+                >
+                  <circle
+                    cx="50"
+                    cy="50"
+                    fill="none"
+                    r="45"
+                    stroke="#251b2e"
+                    stroke-width="3"
+                  ></circle>
+                  <circle
+                    cx="50"
+                    cy="50"
+                    fill="none"
+                    r="45"
+                    stroke="#7f13ec"
+                    stroke-dasharray="283"
+                    stroke-dashoffset="70"
+                    stroke-linecap="round"
+                    stroke-width="3"
+                  ></circle>
+                </svg>
+                <div
+                  class="absolute inset-0 flex flex-col items-center justify-center"
+                >
+                  <div
+                    class="text-7xl md:text-8xl font-black text-white tracking-tighter tabular-nums drop-shadow-2xl font-display"
+                  >
+                    00:24
+                  </div>
+                  <div class="text-[#ab9db9] text-sm font-medium mt-2">
+                    Mantén el enfoque
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="flex flex-col items-center gap-6 w-full max-w-md">
+              <button
+                class="w-full group relative flex items-center justify-center gap-3 h-16 rounded-2xl bg-surface-active hover:bg-primary border border-primary/30 hover:border-primary transition-all duration-300 active:scale-[0.98] shadow-lg shadow-black/40 overflow-hidden"
+              >
+                <div
+                  class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"
+                ></div>
+                <span
+                  class="material-symbols-outlined text-white text-2xl group-hover:animate-bounce"
+                  >ads_click</span
+                >
+                <span class="text-white text-lg font-bold tracking-wide"
+                  >Registrar Distracción</span
+                >
+                <span
+                  class="bg-black/30 text-white text-xs font-bold px-2 py-1 rounded-md border border-white/10 ml-2"
+                  >+1</span
+                >
+              </button>
+              <div class="flex gap-4">
+                <button
+                  class="flex items-center gap-2 px-6 py-3 rounded-xl bg-surface-dark border border-white/5 text-white hover:bg-white/10 transition-colors"
+                  title="Pausar sesión"
+                >
+                  <span class="material-symbols-outlined text-xl">pause</span>
+                  <span class="text-sm font-medium">Pausar</span>
+                </button>
+                <button
+                  class="flex items-center gap-2 px-6 py-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-colors"
+                  title="Finalizar sesión"
+                >
+                  <span class="material-symbols-outlined text-xl">stop</span>
+                  <span class="text-sm font-medium">Finalizar Sesión</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="w-full bg-surface-dark border border-white/5 rounded-2xl p-6 md:p-8"
+          >
+            <div class="flex justify-between items-center mb-6">
+              <div class="flex flex-col gap-1">
+                <h3 class="text-white font-bold text-lg">
+                  Comparación entre Semanas
+                </h3>
+                <p class="text-[#ab9db9] text-sm">
+                  Tasa de distracción promedio
+                </p>
+              </div>
+              <div
+                class="flex items-center bg-background-dark/50 rounded-lg p-1 border border-white/5"
+              >
+                <button
+                  class="p-1 hover:bg-white/10 rounded text-[#ab9db9] hover:text-white transition-colors"
+                >
+                  <span class="material-symbols-outlined text-lg"
+                    >chevron_left</span
+                  >
+                </button>
+                <span class="px-3 text-xs font-medium text-[#ab9db9]"
+                  >Octubre</span
+                >
+                <button
+                  class="p-1 hover:bg-white/10 rounded text-[#ab9db9] hover:text-white transition-colors"
+                >
+                  <span class="material-symbols-outlined text-lg"
+                    >chevron_right</span
+                  >
+                </button>
+              </div>
+            </div>
+            <div class="flex gap-4 h-48 w-full">
+              <div
+                class="flex flex-col justify-between h-40 text-xs text-[#ab9db9] font-medium text-right pr-2 py-2 w-8 shrink-0 border-r border-white/5"
+              >
+                <span>4</span>
+                <span>3</span>
+                <span>2</span>
+                <span>1</span>
+                <span>0</span>
+              </div>
+              <div
+                class="flex-1 flex items-end justify-between gap-2 md:gap-6 px-2"
+              >
+                <div
+                  class="flex flex-col items-center gap-2 w-full group cursor-pointer"
+                >
+                  <div
+                    class="relative w-full bg-surface-active/30 rounded-t-lg flex items-end h-40 overflow-hidden hover:bg-surface-active/50 transition-colors"
+                  >
+                    <div
+                      class="w-full bg-primary/40 group-hover:bg-primary transition-all duration-300 relative"
+                      style="height: 45%"
+                    >
+                      <div
+                        class="opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 -translate-x-1/2 bg-surface-dark border border-white/10 text-white text-xs font-bold py-1 px-2 rounded whitespace-nowrap transition-opacity shadow-lg z-10"
+                      >
+                        1.8/hr
+                      </div>
+                    </div>
+                  </div>
+                  <span class="text-xs text-[#ab9db9] font-medium"
+                    >Semana 1</span
+                  >
+                </div>
+                <div
+                  class="flex flex-col items-center gap-2 w-full group cursor-pointer"
+                >
+                  <div
+                    class="relative w-full bg-surface-active/30 rounded-t-lg flex items-end h-40 overflow-hidden hover:bg-surface-active/50 transition-colors"
+                  >
+                    <div
+                      class="w-full bg-primary/40 group-hover:bg-primary transition-all duration-300 relative"
+                      style="height: 30%"
+                    >
+                      <div
+                        class="opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 -translate-x-1/2 bg-surface-dark border border-white/10 text-white text-xs font-bold py-1 px-2 rounded whitespace-nowrap transition-opacity shadow-lg z-10"
+                      >
+                        1.2/hr
+                      </div>
+                    </div>
+                  </div>
+                  <span class="text-xs text-[#ab9db9] font-medium"
+                    >Semana 2</span
+                  >
+                </div>
+                <div
+                  class="flex flex-col items-center gap-2 w-full group cursor-pointer"
+                >
+                  <div
+                    class="relative w-full bg-surface-active/30 rounded-t-lg flex items-end h-40 overflow-hidden hover:bg-surface-active/50 transition-colors"
+                  >
+                    <div
+                      class="w-full bg-primary/40 group-hover:bg-primary transition-all duration-300 relative"
+                      style="height: 52.5%"
+                    >
+                      <div
+                        class="opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 -translate-x-1/2 bg-surface-dark border border-white/10 text-white text-xs font-bold py-1 px-2 rounded whitespace-nowrap transition-opacity shadow-lg z-10"
+                      >
+                        2.1/hr
+                      </div>
+                    </div>
+                  </div>
+                  <span class="text-xs text-[#ab9db9] font-medium"
+                    >Semana 3</span
+                  >
+                </div>
+                <div
+                  class="flex flex-col items-center gap-2 w-full group cursor-pointer"
+                >
+                  <div
+                    class="relative w-full bg-surface-active/30 rounded-t-lg flex items-end h-40 overflow-hidden hover:bg-surface-active/50 transition-colors"
+                  >
+                    <div
+                      class="w-full bg-gradient-to-t from-primary to-primary/60 transition-all duration-300 relative"
+                      style="height: 33%"
+                    >
+                      <div
+                        class="absolute inset-0 bg-white/10 animate-pulse"
+                      ></div>
+                      <div
+                        class="opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 -translate-x-1/2 bg-surface-dark border border-white/10 text-white text-xs font-bold py-1 px-2 rounded whitespace-nowrap transition-opacity shadow-lg z-10"
+                      >
+                        1.33/hr
+                      </div>
+                    </div>
+                  </div>
+                  <span class="text-xs text-white font-bold">Esta Semana</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="grid grid-cols-1 md:grid-cols-3 gap-4 border-t border-white/5 pt-8"
+          >
+            <div
+              class="bg-surface-dark p-5 rounded-2xl border border-white/5 flex flex-col gap-1 relative overflow-hidden group"
+            >
+              <div
+                class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity"
+              >
+                <span class="material-symbols-outlined text-6xl text-white"
+                  >ssid_chart</span
+                >
+              </div>
+              <div class="flex items-center gap-2 mb-2">
+                <div class="p-1.5 rounded-lg bg-primary/20 text-primary">
+                  <span class="material-symbols-outlined text-lg"
+                    >timeline</span
+                  >
+                </div>
+                <p class="text-[#ab9db9] text-sm font-medium">
+                  Tasa de Distracción Semanal
+                </p>
+              </div>
+              <div class="flex items-baseline gap-3">
+                <span class="text-2xl font-bold text-white"
+                  >1.33<span class="text-sm text-[#ab9db9] font-normal ml-1"
+                    >/hr</span
+                  ></span
+                >
+                <div
+                  class="flex items-center text-green-400 text-xs font-medium bg-green-500/10 px-2 py-0.5 rounded-full"
+                >
+                  <span class="material-symbols-outlined text-sm mr-0.5"
+                    >trending_down</span
+                  >
+                  5%
+                </div>
+              </div>
+              <p class="text-xs text-[#ab9db9]/60 mt-1">
+                vs. 1.40/hr la semana pasada
+              </p>
+            </div>
+            <div
+              class="bg-surface-dark p-5 rounded-2xl border border-white/5 flex flex-col gap-1"
+            >
+              <div class="flex items-center gap-2 mb-2">
+                <div class="p-1.5 rounded-lg bg-blue-500/20 text-blue-400">
+                  <span class="material-symbols-outlined text-lg">bolt</span>
+                </div>
+                <p class="text-[#ab9db9] text-sm font-medium">
+                  Horas de Trabajo Profundo
+                </p>
+              </div>
+              <span class="text-2xl font-bold text-white"
+                >12.5<span class="text-sm text-[#ab9db9] font-normal ml-1"
+                  >hrs</span
+                ></span
+              >
+              <div
+                class="w-full bg-white/5 h-1.5 rounded-full mt-3 overflow-hidden"
+              >
+                <div class="bg-blue-500 h-full w-[65%] rounded-full"></div>
+              </div>
+            </div>
+            <div
+              class="bg-surface-dark p-5 rounded-2xl border border-white/5 flex flex-col gap-1"
+            >
+              <div class="flex items-center gap-2 mb-2">
+                <div class="p-1.5 rounded-lg bg-orange-500/20 text-orange-400">
+                  <span class="material-symbols-outlined text-lg"
+                    >local_fire_department</span
+                  >
+                </div>
+                <p class="text-[#ab9db9] text-sm font-medium">Racha Actual</p>
+              </div>
+              <span class="text-2xl font-bold text-white"
+                >4<span class="text-sm text-[#ab9db9] font-normal ml-1"
+                  >días</span
+                ></span
+              >
+              <p class="text-xs text-[#ab9db9]/60 mt-1">¡Sigue así!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

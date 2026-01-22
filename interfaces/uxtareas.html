@@ -1,0 +1,568 @@
+<!doctype html>
+<html class="dark" lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Mis Tareas con Fondo Violeta Coherente</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#8B5CF6",
+              "primary-hover": "#7C3AED",
+              "background-light": "#f7f6f8",
+              // Updated palette for Deep Dark Violet theme
+              "background-dark": "#0F0A15",
+              "surface-dark": "#15101F",
+              "card-dark": "#1D1829",
+              "hover-dark": "#2E2640",
+              "border-dark": "#2E2640",
+              "surface-light": "#ffffff",
+              "google-blue": "#aecbfa",
+              "google-star": "#8ab4f8",
+              "violet-accent": "#8B5CF6",
+            },
+            fontFamily: {
+              display: ["Inter", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "0.25rem",
+              lg: "0.5rem",
+              xl: "0.75rem",
+              "2xl": "1rem",
+              "3xl": "1.5rem",
+              full: "9999px",
+            },
+          },
+        },
+      };
+    </script>
+    <style type="text/tailwindcss">
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-[#e8eaed] font-display overflow-hidden h-screen flex"
+  >
+    <aside
+      class="w-64 flex-shrink-0 bg-surface-light dark:bg-surface-dark border-r border-gray-200 dark:border-transparent flex flex-col h-full transition-colors duration-300"
+    >
+      <div class="p-4">
+        <div class="flex items-center gap-3 mb-6 px-2">
+          <div
+            class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-8 ring-2 ring-gray-700"
+            style="
+              background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuBKEwOriCWct_obouiHNeQO5YdpNYCmlu75aJhezcnsDesV7WOalgMAM3YR9Rh2bXn_qPe0fti8rQJSLNnyo5g3EEtTZxKPXcyp25EWZtp37MtaQ17YDYblINy1C-fWJvY-DZ3L8tPAAvxkWgmHownfZZXgZ1vep4lpBT2gIv2U00X9LfbT5JN-dByKoIQPHqynL1YdEKGPAt4auZsQJqdGMasEe-yv5-s7y5cWc300XKsRMoDNPO3Gmm_5YCeShvvAuTTAaeeDv-iS&quot;);
+            "
+          ></div>
+          <div>
+            <h1 class="text-sm font-medium leading-none dark:text-gray-200">
+              Productividad
+            </h1>
+            <span class="text-xs text-gray-500 dark:text-gray-400"
+              >Plan Pro</span
+            >
+          </div>
+        </div>
+        <nav class="flex flex-col gap-1">
+          <a
+            class="flex items-center gap-4 px-4 py-2 rounded-full text-gray-600 dark:text-[#e8eaed] hover:bg-gray-100 dark:hover:bg-hover-dark transition-colors group"
+            href="#"
+          >
+            <span
+              class="material-symbols-outlined text-gray-400 group-hover:text-white transition-colors text-[20px]"
+              >calendar_today</span
+            >
+            <span class="text-sm font-medium">Calendario</span>
+          </a>
+          <a
+            class="flex items-center gap-4 px-4 py-2 rounded-full text-gray-600 dark:text-[#e8eaed] hover:bg-gray-100 dark:hover:bg-hover-dark transition-colors group"
+            href="#"
+          >
+            <span
+              class="material-symbols-outlined text-gray-400 group-hover:text-white transition-colors text-[20px]"
+              >timer</span
+            >
+            <span class="text-sm font-medium">Pomodoro</span>
+          </a>
+          <a
+            class="flex items-center gap-4 px-4 py-2 rounded-full text-gray-600 dark:text-[#e8eaed] hover:bg-gray-100 dark:hover:bg-hover-dark transition-colors group"
+            href="#"
+          >
+            <span
+              class="material-symbols-outlined text-gray-400 group-hover:text-white transition-colors text-[20px]"
+              >center_focus_strong</span
+            >
+            <span class="text-sm font-medium">Enfoque</span>
+          </a>
+          <a
+            class="flex items-center gap-4 px-4 py-2 rounded-full bg-violet-100 dark:bg-[#2e2344] text-violet-700 dark:text-violet-300 font-medium"
+            href="#"
+          >
+            <span class="material-symbols-outlined text-[20px] fill-1"
+              >check_box</span
+            >
+            <span class="text-sm">Tareas</span>
+          </a>
+        </nav>
+      </div>
+      <div
+        class="mt-auto p-4 border-t border-gray-200 dark:border-white/5 space-y-2"
+      >
+        <a
+          class="flex items-center gap-4 px-4 py-2 rounded-full text-gray-600 dark:text-[#e8eaed] hover:bg-gray-100 dark:hover:bg-hover-dark transition-colors group"
+          href="#"
+        >
+          <span
+            class="material-symbols-outlined text-gray-400 group-hover:text-white transition-colors text-[20px]"
+            >logout</span
+          >
+          <span class="text-sm font-medium">Cerrar sesión</span>
+        </a>
+      </div>
+    </aside>
+    <main
+      class="flex-1 flex flex-col min-w-0 h-full bg-background-light dark:bg-background-dark"
+    >
+      <header class="flex-shrink-0 pt-8 pb-4 px-8 bg-transparent">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <h1
+              class="text-4xl font-bold text-gray-900 dark:text-white mb-2 tracking-tight"
+            >
+              Mis Tareas
+            </h1>
+            <p class="text-gray-500 dark:text-gray-400 text-sm">
+              Gestiona tus proyectos y subtareas infinitas
+            </p>
+          </div>
+          <button
+            class="flex items-center gap-2 bg-primary hover:bg-primary-hover text-white px-5 py-2.5 rounded-lg shadow-lg shadow-violet-900/20 transition-all active:scale-95 font-medium"
+          >
+            <span class="material-symbols-outlined text-[20px]">add</span>
+            <span>Nueva Tarea</span>
+          </button>
+        </div>
+        <div class="flex items-center gap-3 overflow-x-auto no-scrollbar pb-2">
+          <button
+            class="px-4 py-1.5 rounded-full border border-gray-200 dark:border-border-dark bg-white dark:bg-card-dark hover:bg-gray-50 dark:hover:bg-hover-dark transition-colors flex items-center gap-2 min-w-fit"
+          >
+            <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+            <span class="text-sm font-medium dark:text-gray-300">Todo</span>
+          </button>
+          <button
+            class="px-4 py-1.5 rounded-full bg-primary text-white transition-colors flex items-center gap-2 min-w-fit shadow-md shadow-violet-900/20"
+          >
+            <span class="w-2 h-2 rounded-full bg-white"></span>
+            <span class="text-sm font-medium">Trabajo</span>
+          </button>
+          <button
+            class="px-4 py-1.5 rounded-full border border-gray-200 dark:border-border-dark bg-white dark:bg-card-dark hover:bg-gray-50 dark:hover:bg-hover-dark transition-colors flex items-center gap-2 min-w-fit"
+          >
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+            <span class="text-sm font-medium dark:text-gray-300">Personal</span>
+          </button>
+          <button
+            class="px-4 py-1.5 rounded-full border border-gray-200 dark:border-border-dark bg-white dark:bg-card-dark hover:bg-gray-50 dark:hover:bg-hover-dark transition-colors flex items-center gap-2 min-w-fit"
+          >
+            <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+            <span class="text-sm font-medium dark:text-gray-300">Estudio</span>
+          </button>
+          <button
+            class="px-4 py-1.5 rounded-full border border-gray-200 dark:border-border-dark bg-white dark:bg-card-dark hover:bg-gray-50 dark:hover:bg-hover-dark transition-colors flex items-center gap-2 min-w-fit"
+          >
+            <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+            <span class="text-sm font-medium dark:text-gray-300">Fitness</span>
+          </button>
+        </div>
+      </header>
+      <div class="flex-1 overflow-x-auto px-4 pb-4">
+        <div class="flex h-full gap-4 w-full justify-between min-w-[800px]">
+          <div
+            class="flex-1 flex flex-col h-full bg-white dark:bg-card-dark rounded-2xl shadow-sm border dark:border-none min-w-[280px]"
+          >
+            <div class="px-4 py-3 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <h3
+                  class="font-medium text-base text-gray-900 dark:text-[#e8eaed]"
+                >
+                  Trabajo
+                </h3>
+              </div>
+              <button
+                class="text-gray-400 hover:text-white transition-colors rounded-full p-1 hover:bg-hover-dark"
+              >
+                <span class="material-symbols-outlined text-[18px]"
+                  >more_vert</span
+                >
+              </button>
+            </div>
+            <div class="px-2 pb-2">
+              <button
+                class="flex items-center gap-3 w-full px-2 py-2 text-gray-400 hover:text-white transition-colors group text-left"
+              >
+                <span
+                  class="material-symbols-outlined text-[20px] text-google-blue"
+                  >add_task</span
+                >
+                <span class="text-sm font-medium text-google-blue"
+                  >Agregar una tarea</span
+                >
+              </button>
+            </div>
+            <div
+              class="flex-1 overflow-y-auto px-2 space-y-0.5 custom-scrollbar"
+            >
+              <div
+                class="group flex items-start gap-3 py-2 px-2 hover:bg-hover-dark rounded-md cursor-pointer"
+              >
+                <span
+                  class="material-symbols-outlined text-gray-400 text-[20px] mt-0.5 cursor-pointer hover:text-white"
+                  >radio_button_unchecked</span
+                >
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm text-gray-200 leading-snug">
+                    Informe Financiero Q3
+                  </p>
+                </div>
+                <span
+                  class="material-symbols-outlined text-gray-500 hover:text-google-star text-[20px] opacity-0 group-hover:opacity-100 transition-opacity"
+                  >star</span
+                >
+              </div>
+              <div
+                class="group flex items-start gap-3 py-2 px-2 hover:bg-hover-dark rounded-md cursor-pointer"
+              >
+                <span
+                  class="material-symbols-outlined text-gray-400 text-[20px] mt-0.5 cursor-pointer hover:text-white"
+                  >radio_button_unchecked</span
+                >
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm text-gray-200 leading-snug">
+                    Recopilar hojas de datos Q2
+                  </p>
+                </div>
+                <span
+                  class="material-symbols-outlined text-gray-500 hover:text-google-star text-[20px] opacity-0 group-hover:opacity-100 transition-opacity"
+                  >star</span
+                >
+              </div>
+              <div
+                class="group flex items-start gap-3 py-2 px-2 hover:bg-hover-dark rounded-md cursor-pointer"
+              >
+                <span
+                  class="material-symbols-outlined text-gray-400 text-[20px] mt-0.5 cursor-pointer hover:text-white"
+                  >radio_button_unchecked</span
+                >
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm text-gray-200 leading-snug">
+                    Borrador inicial
+                  </p>
+                </div>
+                <span
+                  class="material-symbols-outlined text-google-star fill-1 text-[20px]"
+                  >star</span
+                >
+              </div>
+              <div class="pl-8">
+                <div
+                  class="group flex items-start gap-3 py-2 px-2 hover:bg-hover-dark rounded-md cursor-pointer"
+                >
+                  <span
+                    class="material-symbols-outlined text-gray-400 text-[16px] mt-0.5 cursor-pointer hover:text-white"
+                    >radio_button_unchecked</span
+                  >
+                  <div class="flex-1 min-w-0">
+                    <p class="text-sm text-gray-200 leading-snug">
+                      Revisar gasto en marketing
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="group flex items-start gap-3 py-2 px-2 hover:bg-hover-dark rounded-md cursor-pointer"
+                >
+                  <span
+                    class="material-symbols-outlined text-gray-400 text-[16px] mt-0.5 cursor-pointer hover:text-white"
+                    >radio_button_unchecked</span
+                  >
+                  <div class="flex-1 min-w-0">
+                    <p class="text-sm text-gray-200 leading-snug">
+                      Comprobar presupuesto IT
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="mt-4 pt-2 border-t border-[#3c4043] dark:border-border-dark"
+              >
+                <details class="group/completed">
+                  <summary
+                    class="flex items-center gap-4 px-2 py-2 cursor-pointer select-none text-gray-400 hover:bg-hover-dark rounded-md transition-colors list-none"
+                  >
+                    <span
+                      class="material-symbols-outlined text-[20px] transition-transform group-open/completed:rotate-90"
+                      >arrow_right</span
+                    >
+                    <span class="text-sm font-medium">Completadas (2)</span>
+                  </summary>
+                  <div class="px-2 pt-1 pb-4 space-y-1">
+                    <div class="flex items-center gap-3 py-1.5 opacity-60">
+                      <span
+                        class="material-symbols-outlined text-gray-400 text-[20px] fill-1"
+                        >check</span
+                      >
+                      <span class="text-sm line-through text-gray-400"
+                        >Enviar correo fecha límite</span
+                      >
+                    </div>
+                    <div class="flex items-center gap-3 py-1.5 opacity-60">
+                      <span
+                        class="material-symbols-outlined text-gray-400 text-[20px] fill-1"
+                        >check</span
+                      >
+                      <span class="text-sm line-through text-gray-400"
+                        >Reservar sala</span
+                      >
+                    </div>
+                  </div>
+                </details>
+              </div>
+            </div>
+          </div>
+          <div
+            class="flex-1 flex flex-col h-full bg-white dark:bg-card-dark rounded-2xl shadow-sm border dark:border-none min-w-[280px]"
+          >
+            <div class="px-4 py-3 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <h3
+                  class="font-medium text-base text-gray-900 dark:text-[#e8eaed]"
+                >
+                  Personal
+                </h3>
+              </div>
+              <button
+                class="text-gray-400 hover:text-white transition-colors rounded-full p-1 hover:bg-hover-dark"
+              >
+                <span class="material-symbols-outlined text-[18px]"
+                  >more_vert</span
+                >
+              </button>
+            </div>
+            <div class="px-2 pb-2">
+              <button
+                class="flex items-center gap-3 w-full px-2 py-2 text-gray-400 hover:text-white transition-colors group text-left"
+              >
+                <span
+                  class="material-symbols-outlined text-[20px] text-google-blue"
+                  >add_task</span
+                >
+                <span class="text-sm font-medium text-google-blue"
+                  >Agregar una tarea</span
+                >
+              </button>
+            </div>
+            <div
+              class="flex-1 overflow-y-auto px-2 space-y-0.5 custom-scrollbar"
+            >
+              <div
+                class="group flex items-start gap-3 py-2 px-2 hover:bg-hover-dark rounded-md cursor-pointer"
+              >
+                <span
+                  class="material-symbols-outlined text-gray-400 text-[20px] mt-0.5 cursor-pointer hover:text-white"
+                  >radio_button_unchecked</span
+                >
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm text-gray-200 leading-snug">
+                    Hacer la compra
+                  </p>
+                </div>
+                <span
+                  class="material-symbols-outlined text-gray-500 hover:text-google-star text-[20px] opacity-0 group-hover:opacity-100 transition-opacity"
+                  >star</span
+                >
+              </div>
+              <div class="pl-8">
+                <div
+                  class="group flex items-start gap-3 py-2 px-2 hover:bg-hover-dark rounded-md cursor-pointer"
+                >
+                  <span
+                    class="material-symbols-outlined text-gray-400 text-[16px] mt-0.5 cursor-pointer hover:text-white"
+                    >radio_button_unchecked</span
+                  >
+                  <div class="flex-1 min-w-0">
+                    <p class="text-sm text-gray-200 leading-snug">
+                      Leche de almendras
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="group flex items-start gap-3 py-2 px-2 hover:bg-hover-dark rounded-md cursor-pointer"
+                >
+                  <span
+                    class="material-symbols-outlined text-gray-400 text-[16px] mt-0.5 cursor-pointer hover:text-white"
+                    >radio_button_unchecked</span
+                  >
+                  <div class="flex-1 min-w-0">
+                    <p class="text-sm text-gray-200 leading-snug">Huevos</p>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="group flex items-start gap-3 py-2 px-2 hover:bg-hover-dark rounded-md cursor-pointer"
+              >
+                <span
+                  class="material-symbols-outlined text-gray-400 text-[20px] mt-0.5 cursor-pointer hover:text-white"
+                  >radio_button_unchecked</span
+                >
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm text-gray-200 leading-snug">
+                    Llamar al dentista
+                  </p>
+                </div>
+                <span
+                  class="material-symbols-outlined text-google-star fill-1 text-[20px]"
+                  >star</span
+                >
+              </div>
+              <div class="mt-auto"></div>
+            </div>
+          </div>
+          <div
+            class="flex-1 flex flex-col h-full bg-white dark:bg-card-dark rounded-2xl shadow-sm border dark:border-none min-w-[280px]"
+          >
+            <div class="px-4 py-3 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <h3
+                  class="font-medium text-base text-gray-900 dark:text-[#e8eaed]"
+                >
+                  Estudio
+                </h3>
+              </div>
+              <button
+                class="text-gray-400 hover:text-white transition-colors rounded-full p-1 hover:bg-hover-dark"
+              >
+                <span class="material-symbols-outlined text-[18px]"
+                  >more_vert</span
+                >
+              </button>
+            </div>
+            <div class="px-2 pb-2">
+              <button
+                class="flex items-center gap-3 w-full px-2 py-2 text-gray-400 hover:text-white transition-colors group text-left"
+              >
+                <span
+                  class="material-symbols-outlined text-[20px] text-google-blue"
+                  >add_task</span
+                >
+                <span class="text-sm font-medium text-google-blue"
+                  >Agregar una tarea</span
+                >
+              </button>
+            </div>
+            <div
+              class="flex-1 overflow-y-auto px-2 space-y-0.5 custom-scrollbar"
+            >
+              <div
+                class="group flex items-start gap-3 py-2 px-2 hover:bg-hover-dark rounded-md cursor-pointer"
+              >
+                <span
+                  class="material-symbols-outlined text-gray-400 text-[20px] mt-0.5 cursor-pointer hover:text-white"
+                  >radio_button_unchecked</span
+                >
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm text-gray-200 leading-snug">
+                    Organizar materias del año que viene
+                  </p>
+                </div>
+                <span
+                  class="material-symbols-outlined text-gray-500 hover:text-google-star text-[20px] opacity-0 group-hover:opacity-100 transition-opacity"
+                  >star</span
+                >
+              </div>
+              <div
+                class="group flex items-start gap-3 py-2 px-2 hover:bg-hover-dark rounded-md cursor-pointer"
+              >
+                <span
+                  class="material-symbols-outlined text-gray-400 text-[20px] mt-0.5 cursor-pointer hover:text-white"
+                  >radio_button_unchecked</span
+                >
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm text-gray-200 leading-snug">Estudiar AM1</p>
+                </div>
+                <span
+                  class="material-symbols-outlined text-gray-500 hover:text-google-star text-[20px] opacity-0 group-hover:opacity-100 transition-opacity"
+                  >star</span
+                >
+              </div>
+              <div
+                class="group flex items-start gap-3 py-2 px-2 hover:bg-hover-dark rounded-md cursor-pointer"
+              >
+                <span
+                  class="material-symbols-outlined text-gray-400 text-[20px] mt-0.5 cursor-pointer hover:text-white"
+                  >radio_button_unchecked</span
+                >
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm text-gray-200 leading-snug">
+                    Final AM1 18/12
+                  </p>
+                </div>
+                <span
+                  class="material-symbols-outlined text-google-star fill-1 text-[20px]"
+                  >star</span
+                >
+              </div>
+              <div
+                class="mt-4 pt-2 border-t border-[#3c4043] dark:border-border-dark"
+              >
+                <details class="group/completed">
+                  <summary
+                    class="flex items-center gap-4 px-2 py-2 cursor-pointer select-none text-gray-400 hover:bg-hover-dark rounded-md transition-colors list-none"
+                  >
+                    <span
+                      class="material-symbols-outlined text-[20px] transition-transform group-open/completed:rotate-90"
+                      >arrow_right</span
+                    >
+                    <span class="text-sm font-medium">Completadas (12)</span>
+                  </summary>
+                </details>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

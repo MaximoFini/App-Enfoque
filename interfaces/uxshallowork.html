@@ -1,0 +1,258 @@
+<!doctype html>
+<html class="dark" lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Sesión de Trabajo Ligero - Productividad</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#13ec13",
+              "background-light": "#f6f8f6",
+              "background-dark": "#102210",
+            },
+            fontFamily: {
+              display: ["Inter", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "0.25rem",
+              lg: "0.5rem",
+              xl: "0.75rem",
+              full: "9999px",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+      }
+      .active-icon {
+        font-variation-settings:
+          "FILL" 1,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white min-h-screen"
+  >
+    <div class="flex h-screen overflow-hidden">
+      <aside
+        class="w-64 border-r border-primary/10 flex flex-col bg-background-light dark:bg-background-dark h-full"
+      >
+        <div class="p-6 flex flex-col gap-8 h-full">
+          <div class="flex items-center gap-3">
+            <div
+              class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-primary"
+              style="
+                background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuBcbBPsWZwmWTQA8E8KXontQaf9cOZmAmd2l1PBxu_JGwXnWxf2Z4RYmxU9l7rGPvS51EN6dQHT-1qzovlLeG43CNAWTKKfxMDaeaSTXmQte6Yg1fd0tu-Us8ADbNunbJYWdJl4-RcJw-SMUei_vhzuriux9gYGEhPOSlMGGhYHDkuIKnsMI4syzgj07JtCHd7sIJArpLmIYuwiZyy3eoaHFza1bqsoulSY7AnQZ5H9Oe_3u6wzTP7os0xVDyFvKNCbbnncyiCyk5ED&quot;);
+              "
+            ></div>
+            <div class="flex flex-col">
+              <h1
+                class="text-slate-900 dark:text-white text-base font-bold leading-normal"
+              >
+                Productividad
+              </h1>
+              <p
+                class="text-primary text-xs font-medium uppercase tracking-wider"
+              >
+                Sesión Activa
+              </p>
+            </div>
+          </div>
+          <nav class="flex flex-col gap-2 grow">
+            <a
+              class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-primary/10 transition-colors"
+              href="#"
+            >
+              <span class="material-symbols-outlined">calendar_today</span>
+              <span class="text-sm font-medium">Calendario</span>
+            </a>
+            <a
+              class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-primary/10 transition-colors"
+              href="#"
+            >
+              <span class="material-symbols-outlined">timer</span>
+              <span class="text-sm font-medium">Pomodoro</span>
+            </a>
+            <a
+              class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary/20 text-primary border border-primary/20"
+              href="#"
+            >
+              <span class="material-symbols-outlined active-icon">target</span>
+              <span class="text-sm font-semibold">Enfoque</span>
+            </a>
+            <a
+              class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-primary/10 transition-colors"
+              href="#"
+            >
+              <span class="material-symbols-outlined">task_alt</span>
+              <span class="text-sm font-medium">Tareas</span>
+            </a>
+            <a
+              class="flex items-center gap-3 px-4 py-3 rounded-lg text-red-500 hover:bg-red-500/10 transition-colors mt-auto"
+              href="#"
+            >
+              <span class="material-symbols-outlined">logout</span>
+              <span class="text-sm font-medium">Cerrar sesión</span>
+            </a>
+          </nav>
+        </div>
+      </aside>
+      <main class="flex-1 flex flex-col overflow-y-auto relative">
+        <header
+          class="flex items-center justify-between border-b border-primary/10 px-8 py-4 bg-background-light/50 dark:bg-background-dark/50 backdrop-blur-md sticky top-0 z-10"
+        >
+          <div class="flex items-center gap-4">
+            <div class="size-6 text-primary">
+              <span class="material-symbols-outlined" style="font-size: 28px"
+                >timer</span
+              >
+            </div>
+            <h2
+              class="text-slate-900 dark:text-white text-lg font-bold tracking-tight"
+            >
+              Sesión de Enfoque
+            </h2>
+          </div>
+          <div class="flex items-center gap-4">
+            <button
+              class="flex min-w-[120px] items-center justify-center rounded-lg h-10 px-6 bg-primary text-background-dark text-sm font-bold transition-transform hover:scale-105"
+            >
+              <span>Usuario</span>
+            </button>
+            <div
+              class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border border-primary/20"
+              style="
+                background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuC_db_oWerc_abVwoviHOcEO-HZujJiVxpEmXBwL1-JbYab-q-PesbwDOV0FxrCcuZCnFi4zCNIEpCzKcYdR0DsRnFJDpLFZtYtXmhvjGBEYr6mSdteMlycbACEG2atWTTUuK5w8T52PcUJYJmq6Rx7vDcYGpVoHvq4b8E-KqwREw_ob6E9jdb8fj4HWlCr9cDBi8pi1ZVJ-WUuk1-K2CPyyxI7EcUvzEo528xJdrSfkvS1VnyU1lS18xTI3oTNaTVei5Jxtpz5i3ZJ&quot;);
+              "
+            ></div>
+          </div>
+        </header>
+        <div
+          class="max-w-4xl mx-auto w-full px-8 py-10 flex flex-col items-center"
+        >
+          <div class="w-full max-w-md mb-8">
+            <div
+              class="flex h-12 items-center rounded-xl bg-slate-200 dark:bg-slate-800/50 p-1.5 border border-primary/5"
+            >
+              <label
+                class="flex flex-1 cursor-pointer h-full items-center justify-center rounded-lg px-4 text-slate-500 dark:text-slate-400 text-sm font-medium transition-all"
+              >
+                <span class="truncate">Trabajo Profundo</span>
+                <input
+                  class="hidden"
+                  name="session-type"
+                  type="radio"
+                  value="deep"
+                />
+              </label>
+              <label
+                class="flex flex-1 cursor-pointer h-full items-center justify-center rounded-lg px-4 bg-white dark:bg-background-dark shadow-lg text-primary text-sm font-bold transition-all border border-primary/20"
+              >
+                <span class="truncate">Trabajo Ligero</span>
+                <input
+                  checked=""
+                  class="hidden"
+                  name="session-type"
+                  type="radio"
+                  value="shallow"
+                />
+              </label>
+            </div>
+          </div>
+          <div class="text-center mb-12">
+            <h1
+              class="text-slate-900 dark:text-white text-4xl md:text-5xl font-extrabold tracking-tight mb-2"
+            >
+              Trabajo Ligero
+            </h1>
+            <p class="text-slate-500 dark:text-slate-400 text-lg">
+              Mantenlo fluido y sin presiones.
+            </p>
+          </div>
+          <div class="relative flex items-center justify-center mb-16">
+            <div class="relative w-80 h-80 flex items-center justify-center">
+              <svg class="w-full h-full transform -rotate-90">
+                <circle
+                  class="text-slate-200 dark:text-slate-800"
+                  cx="160"
+                  cy="160"
+                  fill="transparent"
+                  r="145"
+                  stroke="currentColor"
+                  stroke-width="8"
+                ></circle>
+                <circle
+                  class="text-primary drop-shadow-[0_0_8px_rgba(19,236,19,0.4)]"
+                  cx="160"
+                  cy="160"
+                  fill="transparent"
+                  r="145"
+                  stroke="currentColor"
+                  stroke-dasharray="911"
+                  stroke-dashoffset="200"
+                  stroke-linecap="round"
+                  stroke-width="12"
+                ></circle>
+              </svg>
+              <div
+                class="absolute inset-0 flex flex-col items-center justify-center"
+              >
+                <div class="flex items-baseline gap-1">
+                  <span
+                    class="text-6xl md:text-7xl font-bold tracking-tighter text-slate-900 dark:text-white"
+                    >25</span
+                  >
+                  <span class="text-6xl md:text-7xl font-light text-slate-400"
+                    >:</span
+                  >
+                  <span
+                    class="text-6xl md:text-7xl font-bold tracking-tighter text-slate-900 dark:text-white"
+                    >00</span
+                  >
+                </div>
+                <p
+                  class="text-primary font-medium tracking-[0.2em] uppercase mt-2 text-sm"
+                >
+                  Minutos Restantes
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-col sm:flex-row gap-4 w-full max-w-sm">
+            <button
+              class="flex-1 flex items-center justify-center gap-2 h-14 rounded-xl bg-primary/10 border border-primary/30 text-primary font-bold hover:bg-primary/20 transition-all"
+            >
+              <span class="material-symbols-outlined">pause</span>
+              Pausar
+            </button>
+            <button
+              class="flex-1 flex items-center justify-center gap-2 h-14 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold hover:bg-red-500/10 hover:text-red-500 hover:border-red-500/30 border border-transparent transition-all"
+            >
+              <span class="material-symbols-outlined">stop</span>
+              Finalizar
+            </button>
+          </div>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
