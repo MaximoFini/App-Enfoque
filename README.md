@@ -13,7 +13,7 @@ Modelo usado para conectar todo: Sonnet 4.5/Opus 4.5 (12% de uso de github copil
 
 # Link app
 
-https://app-enfoque.vercel.app/login
+https://app-enfoque.vercel.app/
 
 ## 📦 Instalación
 
