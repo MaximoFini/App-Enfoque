@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAuthStore } from "../store/authStore";
 import { useTaskStore } from "../store/taskStore";
 import { LogOut, Plus, CheckCircle, Circle, Trash2 } from "lucide-react";

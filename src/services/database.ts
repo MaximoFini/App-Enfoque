@@ -1,5 +1,5 @@
 import { supabase } from "../lib/supabase";
-import { format, parseISO } from "date-fns";
+import { format } from "date-fns";
 
 export interface Category {
   id: string;

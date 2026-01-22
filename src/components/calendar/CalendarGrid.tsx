@@ -17,7 +17,7 @@ const HOUR_HEIGHT = 40;
 
 // Default visible range (7am to 9pm = 14 hours)
 const DEFAULT_START_HOUR = 7;
-const DEFAULT_END_HOUR = 21;
+// const DEFAULT_END_HOUR = 21; // Reserved for future use
 
 // Format hour for display
 const formatHour = (hour: number) => {
@@ -283,7 +283,7 @@ export const CalendarGrid = () => {
   const [draggingBlock, setDraggingBlock] = useState<TimeBlock | null>(null);
   const [dragOverDate, setDragOverDate] = useState<Date | null>(null);
   const [dragOverHour, setDragOverHour] = useState<number | null>(null);
-  const [dragMouseY, setDragMouseY] = useState<number>(0);
+  // const [dragMouseY, setDragMouseY] = useState<number>(0); // Reserved for future drag preview
 
   // Resize state
   const [resizingBlock, setResizingBlock] = useState<TimeBlock | null>(null);
@@ -336,7 +336,8 @@ export const CalendarGrid = () => {
     if (!draggingBlock) return;
 
     const handleMouseMove = (e: MouseEvent) => {
-      setDragMouseY(e.clientY);
+      // Track mouse Y for drag preview (currently disabled)
+      // setDragMouseY(e.clientY);
 
       // Find which day column we're over
       if (gridRef.current) {
@@ -696,7 +697,7 @@ export const CalendarGrid = () => {
                 onDragOver={handleDragOver}
                 onDrop={handleDrop}
                 onResizeStart={handleResizeStart}
-                isDragOver={isDragOver}
+                isDragOver={isDragOver ?? undefined}
               />
             );
           })}

@@ -1,173 +1,22 @@
 # 🐝 Bombini - Aplicación de Enfoque y Productividad
 
-Una aplicación web moderna para gestionar tu tiempo, aumentar la productividad y mantener el enfoque en tus tareas.
+Una aplicación web para gestionar tu tiempo, aumentar la productividad y mantener el enfoque en tus tareas.
+Con Pomodoro, Sesiones de Enfoque, Calendario, Tareas y proximamente Finanzas y Analiticas.
 
-## ✨ Características
+# Proceso de desarrollo
 
-### 🍅 Pomodoro Timer
+Planificacion: Claude Sonnet 4.5
+Estilos: Google Stitch (codigos HTML pegados en /interfaces)
+Logica: archivo map.md cargado en la raiz con la planificacion de Claude (prompting) separado por faseo
+Modelo usado para conectar todo: Sonnet 4.5/Opus 4.5 (12% de uso de github copilot del mes)
 
-- Temporizador Pomodoro configurable (15-90 minutos)
-- Descansos configurables (5-20 minutos)
-- Auto-play entre sesiones de trabajo y descanso
-- Visualización circular del progreso
-- Seguimiento del tiempo total trabajado
-- Guardado de sesiones en el calendario
-
-### 🎯 Sesiones de Enfoque (Deep Work / Shallow Work)
-
-- **Trabajo Profundo**: Sesiones intensivas con tracking de distracciones
-- **Trabajo Ligero**: Sesiones relajadas sin presión
-- Duraciones de 15 a 180 minutos
-- Estadísticas semanales de distracciones por hora
-- Comparación entre semanas
-
-### 📅 Calendario
-
-- Vista diaria con bloques de tiempo
-- Gestión de eventos y tareas
-- Integración con sesiones de Pomodoro guardadas
-- Categorización por colores
-
-### ✅ Tareas
-
-- Lista de tareas pendientes
-- Organización y priorización
-
-### 💰 Finanzas (Próximamente)
-
-- Seguimiento de gastos
-- Presupuestos
-
-### 📊 Analíticas (Próximamente)
-
-- Estadísticas detalladas de productividad
-- Reportes de uso
-
----
-
-## 🚀 Características Técnicas
-
-### Timer Global Persistente
-
-El sistema de timers fue diseñado para funcionar sin interrupciones:
-
-- **No se detiene al navegar**: El timer sigue corriendo aunque cambies de página
-- **Cálculo por timestamps**: Usa `endAtMs - Date.now()` para evitar drift, incluso con el tab en background
-- **Persistencia en localStorage**: Si recargas la página (F5), el timer se reanuda correctamente
-- **Un único tick global**: Sin memory leaks, un solo intervalo maneja todos los timers
-- **Título de pestaña dinámico**: Muestra el countdown en tiempo real (ej: `25:00 – Time to focus!`)
-
-### Estados del Timer
-
-```
-idle     → Sin timer activo
-running  → Timer corriendo (usa endAtMs para calcular tiempo restante)
-paused   → Timer pausado (guarda pausedRemainingMs)
-finished → Timer terminado
-```
-
-### Widget Flotante
-
-- Timer minimizable que flota sobre la UI
-- Arrastrable a cualquier posición
-- Controles de play/pause y reset
-- Se mantiene visible al navegar entre páginas
-
----
-
-## 🛠️ Stack Tecnológico
-
-- **Frontend**: React 18 + TypeScript
-- **Routing**: React Router DOM
-- **Estado**: Zustand (con persistencia)
-- **Estilos**: Tailwind CSS
-- **Backend**: Supabase (Auth + Database)
-- **Build**: Vite
-- **Iconos**: Material Symbols
-
----
+# Link a deploy en Vercel
 
 ## 📦 Instalación
 
 ```bash
-# Clonar el repositorio
 git clone https://github.com/tu-usuario/enfoque-v2.git
-
-# Instalar dependencias
 npm install
-
-# Configurar variables de entorno
 cp .env.example .env
-# Editar .env con tus credenciales de Supabase
-
-# Iniciar servidor de desarrollo
 npm run dev
 ```
-
----
-
-## 🔧 Scripts Disponibles
-
-```bash
-npm run dev      # Servidor de desarrollo
-npm run build    # Build de producción
-npm run preview  # Preview del build
-npm run lint     # Linter
-```
-
----
-
-## 📁 Estructura del Proyecto
-
-```
-src/
-├── components/
-│   ├── calendar/          # Componentes del calendario
-│   ├── categories/        # Gestión de categorías
-│   ├── layout/            # MainLayout, Sidebar
-│   ├── pomodoro/          # Modal de guardado
-│   ├── tasks/             # Componentes de tareas
-│   └── timer/             # FloatingTimer
-├── hooks/
-│   ├── useFocusTimer.ts   # Hook adaptador para Enfoque
-│   ├── usePomodoroTimer.ts # Hook adaptador para Pomodoro
-│   └── usePageTitle.ts    # (legacy)
-├── pages/
-│   ├── Calendar.tsx
-│   ├── Pomodoro.tsx
-│   ├── Enfoque.tsx
-│   ├── Tareas.tsx
-│   ├── Finanzas.tsx       # Próximamente
-│   └── Analiticas.tsx     # Próximamente
-├── store/
-│   ├── globalTimerStore.ts # Timer global con persistencia
-│   ├── focusStore.ts       # Estadísticas de enfoque
-│   ├── calendarStore.ts    # Estado del calendario
-│   └── ...
-├── services/
-│   └── database.ts         # Servicios de Supabase
-└── lib/
-    └── supabase.ts         # Cliente de Supabase
-```
-
----
-
-## 🎨 Diseño
-
-- Tema oscuro por defecto
-- Paleta de colores:
-  - Primario: `#135bec` (Azul)
-  - Secundario: `#8B5CF6` (Violeta)
-  - Éxito: `#10B981` (Verde)
-  - Deep Work: `#7f13ec` (Púrpura)
-  - Shallow Work: `#13ec13` (Verde brillante)
-
----
-
-## 📝 Licencia
-
-MIT License - Ver [LICENSE](LICENSE) para más detalles.
-
----
-
-Desarrollado con ❤️ para mejorar tu productividad.
