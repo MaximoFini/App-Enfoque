@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { TaskPriority, useTasksStore } from "../../store/tasksStore";
+import { supabase } from "../../lib/supabase";
 
 export const TaskModal = () => {
   const {
@@ -34,8 +35,19 @@ export const TaskModal = () => {
       setDueDate(
         editingTask.due_date ? editingTask.due_date.split("T")[0] : "",
       );
-      // Subtasks would need to be fetched separately if editing
-      setSubtasks([]);
+      // Fetch existing subtasks from Supabase
+      supabase
+        .from("tasks")
+        .select("*")
+        .eq("parent_task_id", editingTask.id)
+        .order("order_index", { ascending: true })
+        .then(({ data }) => {
+          if (data) {
+            setSubtasks(
+              data.map((s) => ({ id: s.id, title: s.title, completed: s.completed })),
+            );
+          }
+        });
     } else if (createModalCategoryId) {
       setTitle("");
       setCategoryId(createModalCategoryId);
@@ -46,21 +58,33 @@ export const TaskModal = () => {
   }, [editingTask, createModalCategoryId]);
 
   const handleSave = async () => {
-    if (!title.trim() || !categoryId) return;
+    if (!title.trim()) return;
 
     setIsSubmitting(true);
     try {
       if (isEditing && editingTask) {
         await updateTask(editingTask.id, {
           title: title.trim(),
-          category_id: categoryId,
+          category_id: categoryId || null,
           priority,
           due_date: dueDate || null,
         });
+        // Insert any new subtasks (those without an id yet)
+        const newSubtasks = subtasks.filter((s) => !s.id);
+        for (const subtask of newSubtasks) {
+          await addTask({
+            title: subtask.title,
+            category_id: categoryId || null,
+            priority: "medium",
+            completed: false,
+            due_date: null,
+            parent_task_id: editingTask.id,
+          });
+        }
       } else {
         const newTask = await addTask({
           title: title.trim(),
-          category_id: categoryId,
+          category_id: categoryId || null,
           priority,
           due_date: dueDate || null,
           completed: false,
@@ -128,23 +152,20 @@ export const TaskModal = () => {
 
     switch (p) {
       case "high":
-        return `${base} ${
-          isActive
-            ? "border-red-500 bg-red-500/20 text-red-400"
-            : "border-[#2E2640] text-gray-400 hover:border-red-500/50"
-        }`;
+        return `${base} ${isActive
+          ? "border-red-500 bg-red-500/20 text-red-400"
+          : "border-[#2E2640] text-gray-400 hover:border-red-500/50"
+          }`;
       case "medium":
-        return `${base} ${
-          isActive
-            ? "border-yellow-500 bg-yellow-500/20 text-yellow-400"
-            : "border-[#2E2640] text-gray-400 hover:border-yellow-500/50"
-        }`;
+        return `${base} ${isActive
+          ? "border-yellow-500 bg-yellow-500/20 text-yellow-400"
+          : "border-[#2E2640] text-gray-400 hover:border-yellow-500/50"
+          }`;
       case "low":
-        return `${base} ${
-          isActive
-            ? "border-green-500 bg-green-500/20 text-green-400"
-            : "border-[#2E2640] text-gray-400 hover:border-green-500/50"
-        }`;
+        return `${base} ${isActive
+          ? "border-green-500 bg-green-500/20 text-green-400"
+          : "border-[#2E2640] text-gray-400 hover:border-green-500/50"
+          }`;
     }
   };
 
@@ -200,6 +221,7 @@ export const TaskModal = () => {
               onChange={(e) => setCategoryId(e.target.value)}
               className="w-full px-4 py-3 bg-[#15101F] border border-[#2E2640] rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-[#8B5CF6] focus:border-transparent transition-all appearance-none cursor-pointer"
             >
+              <option value="">Sin categoría</option>
               {categories.map((cat) => (
                 <option key={cat.id} value={cat.id}>
                   {cat.name}
@@ -266,55 +288,53 @@ export const TaskModal = () => {
             />
           </div>
 
-          {/* Subtasks (only for new tasks) */}
-          {!isEditing && (
-            <div>
-              <label className="block text-sm font-medium text-gray-400 mb-2">
-                Subtareas
-              </label>
-              <div className="space-y-2">
-                {subtasks.map((subtask, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center gap-2 px-3 py-2 bg-[#15101F] rounded-lg"
-                  >
-                    <span className="material-symbols-outlined text-[18px] text-gray-500">
-                      subdirectory_arrow_right
-                    </span>
-                    <span className="flex-1 text-sm text-gray-300">
-                      {subtask.title}
-                    </span>
-                    <button
-                      onClick={() => handleRemoveSubtask(index)}
-                      className="text-gray-500 hover:text-red-400 transition-colors"
-                    >
-                      <span className="material-symbols-outlined text-[18px]">
-                        close
-                      </span>
-                    </button>
-                  </div>
-                ))}
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={newSubtaskTitle}
-                    onChange={(e) => setNewSubtaskTitle(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && handleAddSubtask()}
-                    placeholder="Agregar subtarea..."
-                    className="flex-1 px-3 py-2 bg-[#15101F] border border-[#2E2640] rounded-lg text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-[#8B5CF6]"
-                  />
+          {/* Subtasks (for new tasks and editing) */}
+          <div>
+            <label className="block text-sm font-medium text-gray-400 mb-2">
+              Subtareas
+            </label>
+            <div className="space-y-2">
+              {subtasks.map((subtask, index) => (
+                <div
+                  key={index}
+                  className="flex items-center gap-2 px-3 py-2 bg-[#15101F] rounded-lg"
+                >
+                  <span className="material-symbols-outlined text-[18px] text-gray-500">
+                    subdirectory_arrow_right
+                  </span>
+                  <span className="flex-1 text-sm text-gray-300">
+                    {subtask.title}
+                  </span>
                   <button
-                    onClick={handleAddSubtask}
-                    className="px-3 py-2 bg-[#2E2640] hover:bg-[#3E3650] rounded-lg text-gray-400 hover:text-white transition-colors"
+                    onClick={() => handleRemoveSubtask(index)}
+                    className="text-gray-500 hover:text-red-400 transition-colors"
                   >
                     <span className="material-symbols-outlined text-[18px]">
-                      add
+                      close
                     </span>
                   </button>
                 </div>
+              ))}
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={newSubtaskTitle}
+                  onChange={(e) => setNewSubtaskTitle(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleAddSubtask()}
+                  placeholder="Agregar subtarea..."
+                  className="flex-1 px-3 py-2 bg-[#15101F] border border-[#2E2640] rounded-lg text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-[#8B5CF6]"
+                />
+                <button
+                  onClick={handleAddSubtask}
+                  className="px-3 py-2 bg-[#2E2640] hover:bg-[#3E3650] rounded-lg text-gray-400 hover:text-white transition-colors"
+                >
+                  <span className="material-symbols-outlined text-[18px]">
+                    add
+                  </span>
+                </button>
               </div>
             </div>
-          )}
+          </div>
         </div>
 
         {/* Footer */}

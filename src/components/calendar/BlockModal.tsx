@@ -13,6 +13,13 @@ interface BlockModalProps {
   selectedDate?: Date | null;
   selectedHour?: number;
   editingBlock?: TimeBlock | null;
+  // Props de pre-completado (para modal post-sesión)
+  prefillStartTime?: string;
+  prefillEndTime?: string;
+  prefillDate?: string;
+  prefillType?: BlockType;
+  /** Si true muestra un banner explicando que viene de una sesión finalizada */
+  fromSession?: boolean;
 }
 
 const BLOCK_COLORS: { value: BlockColor; hex: string; label: string }[] = [
@@ -43,6 +50,11 @@ export const BlockModal = ({
   selectedDate,
   selectedHour,
   editingBlock,
+  prefillStartTime,
+  prefillEndTime,
+  prefillDate,
+  prefillType,
+  fromSession = false,
 }: BlockModalProps) => {
   const { addBlock, updateBlock, deleteBlock, categories, fetchCategories } =
     useCalendarStore();
@@ -75,27 +87,41 @@ export const BlockModal = ({
       } else {
         // Creating new block
         setTitle("");
-        setType("deep-work");
+        setType(prefillType || "deep-work");
         setColor("blue");
         setCategoryId(null);
 
-        if (selectedDate) {
+        // Prefill de fecha
+        if (prefillDate) {
+          setDate(prefillDate);
+        } else if (selectedDate) {
           setDate(format(selectedDate, "yyyy-MM-dd"));
         } else {
           setDate(format(new Date(), "yyyy-MM-dd"));
         }
 
-        if (selectedHour !== undefined) {
+        // Prefill de hora de inicio
+        if (prefillStartTime) {
+          setStartTime(prefillStartTime);
+        } else if (selectedHour !== undefined) {
           setStartTime(formatTimeForInput(selectedHour));
-          setEndTime(formatTimeForInput(selectedHour + 1));
         } else {
           const now = new Date();
           setStartTime(formatTimeForInput(now.getHours(), now.getMinutes()));
+        }
+
+        // Prefill de hora de fin
+        if (prefillEndTime) {
+          setEndTime(prefillEndTime);
+        } else if (selectedHour !== undefined) {
+          setEndTime(formatTimeForInput(selectedHour + 1));
+        } else {
+          const now = new Date();
           setEndTime(formatTimeForInput(now.getHours() + 1, now.getMinutes()));
         }
       }
     }
-  }, [isOpen, editingBlock, selectedDate, selectedHour]);
+  }, [isOpen, editingBlock, selectedDate, selectedHour, prefillStartTime, prefillEndTime, prefillDate, prefillType]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -105,7 +131,10 @@ export const BlockModal = ({
     const blockData = {
       title: title.trim(),
       type,
-      color: type === "other" ? color : undefined,
+      // Solo guardamos color manual cuando es "other" sin categoría.
+      // deep-work y shallow-work tienen color fijo por tipo en getBlockStyles.
+      // other con categoría usará en el futuro el color de la categoría desde CalendarGrid.
+      color: type === "other" && !categoryId ? color : undefined,
       categoryId: categoryId || undefined,
       date,
       startTime,
@@ -163,6 +192,23 @@ export const BlockModal = ({
           </button>
         </div>
 
+        {/* Banner de sesión completada */}
+        {fromSession && (
+          <div className="flex items-center gap-3 px-6 py-3 bg-emerald-500/10 border-b border-emerald-500/20">
+            <span className="material-symbols-outlined text-emerald-400 text-[20px]">
+              check_circle
+            </span>
+            <div>
+              <p className="text-xs font-semibold text-emerald-400">
+                ¡Sesión completada!
+              </p>
+              <p className="text-[11px] text-emerald-400/70">
+                Registra esta sesión como bloque en tu calendario.
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Body */}
         <form onSubmit={handleSubmit} className="p-6 space-y-5">
           {/* Title Input */}
@@ -198,11 +244,10 @@ export const BlockModal = ({
                 />
                 <div
                   className={`flex flex-col items-center justify-center p-3 rounded-lg border transition-all
-                  ${
-                    type === "deep-work"
+                  ${type === "deep-work"
                       ? "bg-[#8b5cf6]/10 border-[#8b5cf6] text-[#8b5cf6]"
                       : "border-[#282e39] bg-[#111318] text-gray-400 hover:bg-[#282e39]"
-                  }`}
+                    }`}
                 >
                   <span className="material-symbols-outlined mb-1 text-[20px]">
                     psychology
@@ -223,11 +268,10 @@ export const BlockModal = ({
                 />
                 <div
                   className={`flex flex-col items-center justify-center p-3 rounded-lg border transition-all
-                  ${
-                    type === "shallow-work"
+                  ${type === "shallow-work"
                       ? "bg-[#10b981]/10 border-[#10b981] text-[#10b981]"
                       : "border-[#282e39] bg-[#111318] text-gray-400 hover:bg-[#282e39]"
-                  }`}
+                    }`}
                 >
                   <span className="material-symbols-outlined mb-1 text-[20px]">
                     speed
@@ -248,11 +292,10 @@ export const BlockModal = ({
                 />
                 <div
                   className={`flex flex-col items-center justify-center p-3 rounded-lg border transition-all
-                  ${
-                    type === "other"
+                  ${type === "other"
                       ? "bg-cal-primary/10 border-cal-primary text-cal-primary"
                       : "border-[#282e39] bg-[#111318] text-gray-400 hover:bg-[#282e39]"
-                  }`}
+                    }`}
                 >
                   <span className="material-symbols-outlined mb-1 text-[20px]">
                     calendar_view_day
@@ -263,8 +306,8 @@ export const BlockModal = ({
             </div>
           </div>
 
-          {/* Color Selector (only when type is 'other') */}
-          {type === "other" && (
+          {/* Color Selector — solo para "other" sin categoría seleccionada */}
+          {type === "other" && !categoryId && (
             <div className="space-y-1.5">
               <label className="text-xs font-semibold text-[#9da6b9] uppercase">
                 Color
@@ -275,16 +318,39 @@ export const BlockModal = ({
                     key={c.value}
                     type="button"
                     onClick={() => setColor(c.value)}
-                    className={`w-8 h-8 rounded-full transition-all ${
-                      color === c.value
-                        ? "ring-2 ring-white ring-offset-2 ring-offset-[#1e232e]"
-                        : "hover:scale-110"
-                    }`}
+                    className={`w-8 h-8 rounded-full transition-all ${color === c.value
+                      ? "ring-2 ring-white ring-offset-2 ring-offset-[#1e232e]"
+                      : "hover:scale-110"
+                      }`}
                     style={{ backgroundColor: c.hex }}
                     title={c.label}
                   />
                 ))}
               </div>
+            </div>
+          )}
+
+          {/* Indicador de color para deep/shallow o "other" con categoría */}
+          {(type === "deep-work" || type === "shallow-work" || (type === "other" && categoryId)) && (
+            <div className="flex items-center gap-2 py-1">
+              <div
+                className="w-4 h-4 rounded-full flex-shrink-0"
+                style={{
+                  backgroundColor:
+                    type === "deep-work"
+                      ? "#8B5CF6"
+                      : type === "shallow-work"
+                        ? "#10B981"
+                        : categories.find((c) => c.id === categoryId)?.color || "#6B7280",
+                }}
+              />
+              <span className="text-xs text-gray-400">
+                {type === "deep-work"
+                  ? "Color fijo: violeta (Deep Work)"
+                  : type === "shallow-work"
+                    ? "Color fijo: verde (Shallow Work)"
+                    : `Color de la categoría seleccionada`}
+              </span>
             </div>
           )}
 
@@ -360,6 +426,18 @@ export const BlockModal = ({
               />
             </div>
           </div>
+
+          {/* Hint cuando el bloque cruza medianoche */}
+          {endTime <= startTime && startTime !== "" && endTime !== "" && (
+            <div className="flex items-center gap-2 text-xs text-amber-400 bg-amber-400/10 border border-amber-400/20 rounded-lg px-3 py-2">
+              <span className="material-symbols-outlined text-[16px]">
+                nights_stay
+              </span>
+              <span>
+                El bloque termina al día siguiente (+1 día)
+              </span>
+            </div>
+          )}
         </form>
 
         {/* Footer */}

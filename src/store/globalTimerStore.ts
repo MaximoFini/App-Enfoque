@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
+import { playEndSound } from "../utils/playEndSound";
 
 /**
  * Sistema de Timer Global con Persistencia
@@ -285,11 +286,19 @@ export const useGlobalTimerStore = create<TimerState>()(
         ? Math.max(0, state.endAtMs - Date.now())
         : 0;
 
+      // Si es Pomodoro en modo trabajo, acumular el tiempo parcial trabajado
+      let updatedTotalWorkMs = state.totalWorkMs;
+      if (state.activeTimer === "pomodoro" && state.pomodoroMode === "work") {
+        const partialWorked = state.pomodoroConfig.workDurationMs - remaining;
+        updatedTotalWorkMs = partialWorked;
+      }
+
       set({
         status: "paused",
         endAtMs: null,
         pausedRemainingMs: remaining,
         timeRemainingMs: remaining,
+        totalWorkMs: updatedTotalWorkMs,
       });
 
       get()._persist();
@@ -447,6 +456,9 @@ export const useGlobalTimerStore = create<TimerState>()(
               totalWorkMs: newTotalWorkMs,
             });
 
+            // Sonido al completar ciclo de Pomodoro
+            if (state.pomodoroMode === "work") playEndSound("pomodoro");
+
             get()._persist();
           } else {
             // Pausar y cambiar modo
@@ -466,13 +478,30 @@ export const useGlobalTimerStore = create<TimerState>()(
               totalWorkMs: newTotalWorkMs,
             });
 
+            // Sonido al completar ciclo de Pomodoro
+            if (state.pomodoroMode === "work") playEndSound("pomodoro");
+
             get()._persist();
           }
         } else if (state.activeTimer === "focus") {
+          // Capturar el tiempo real transcurrido antes de limpiar el estado
+          const realElapsedMs = state.focusConfig.durationMs - Math.max(0, remaining);
+
           set({
             status: "finished",
             timeRemainingMs: 0,
             endAtMs: null,
+          });
+
+          // Sonido al terminar sesión de enfoque
+          playEndSound("focus");
+
+          // Disparar modal de registro de bloque
+          // Import dinámico para evitar dependencia circular en el módulo
+          import("./focusCompletionStore").then(({ useFocusCompletionStore }) => {
+            useFocusCompletionStore
+              .getState()
+              .triggerCompletion(state.focusConfig.focusType, realElapsedMs);
           });
 
           clearStorage();

@@ -208,11 +208,10 @@ export const CategoryModal = () => {
                         key={color.value}
                         type="button"
                         onClick={() => setSelectedColor(color.value)}
-                        className={`w-full aspect-square rounded-lg transition-all flex items-center justify-center ${
-                          selectedColor === color.value
+                        className={`w-full aspect-square rounded-lg transition-all flex items-center justify-center ${selectedColor === color.value
                             ? "ring-2 ring-white ring-offset-2 ring-offset-[#1D1829] scale-110"
                             : "hover:scale-105"
-                        }`}
+                          }`}
                         style={{ backgroundColor: color.value }}
                         title={color.name}
                       >
@@ -300,11 +299,10 @@ export const CategoryModal = () => {
                 {categories.map((category) => (
                   <div
                     key={category.id}
-                    className={`group flex items-center gap-3 p-3 rounded-xl transition-all border ${
-                      editingCategory?.id === category.id
+                    className={`group flex items-center gap-3 p-3 rounded-xl transition-all border ${editingCategory?.id === category.id
                         ? "bg-[#8B5CF6]/10 border-[#8B5CF6]/30"
                         : "bg-[#15101F] border-[#2E2640] hover:border-[#3E3650]"
-                    }`}
+                      }`}
                   >
                     {/* Color indicator */}
                     <div

@@ -10,6 +10,7 @@ import { Finanzas } from "./pages/Finanzas";
 import { Analiticas } from "./pages/Analiticas";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { MainLayout } from "./components/layout/MainLayout";
+import { NotFound } from "./pages/NotFound";
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
           <Route path="/finanzas" element={<Finanzas />} />
           <Route path="/analiticas" element={<Analiticas />} />
         </Route>
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
   );

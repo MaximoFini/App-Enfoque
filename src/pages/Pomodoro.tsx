@@ -9,6 +9,7 @@ import { useCalendarStore } from "../store/calendarStoreNew";
 import { categoriesService } from "../services/database";
 import { SaveToCalendarModal } from "../components/pomodoro/SaveToCalendarModal";
 import { useFloatingTimerStore } from "../store/floatingTimerStore";
+import { useGlobalTimerStore } from "../store/globalTimerStore";
 
 export const Pomodoro = () => {
   const {
@@ -24,6 +25,7 @@ export const Pomodoro = () => {
     setAutoPlay,
     start,
     pause,
+    resume,
     reset,
     switchMode,
     getSessionPreview,
@@ -32,6 +34,10 @@ export const Pomodoro = () => {
 
   const { addBlock } = useCalendarStore();
   const { minimize, isMinimized, restore, source } = useFloatingTimerStore();
+  const globalTimer = useGlobalTimerStore();
+  const isPaused =
+    globalTimer.activeTimer === "pomodoro" &&
+    globalTimer.status === "paused";
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [sessionPreview, setSessionPreview] = useState<SavedSessionData | null>(
     null,
@@ -108,10 +114,12 @@ export const Pomodoro = () => {
     }
   };
 
-  // Toggle play/pause
+  // Toggle play/pause/resume
   const handlePlayPause = () => {
     if (isRunning) {
       pause();
+    } else if (isPaused) {
+      resume();
     } else {
       start();
     }
@@ -155,22 +163,20 @@ export const Pomodoro = () => {
         <div className="bg-[#1e293b] p-1.5 rounded-full flex items-center mb-10 shadow-lg border border-[#282e39]">
           <button
             onClick={() => !isRunning && switchMode("pomodoro")}
-            className={`rounded-full px-8 py-2 text-sm font-semibold transition-all ${
-              currentMode === "pomodoro" || currentMode === "paused"
-                ? "bg-primary text-white shadow-lg shadow-blue-900/20"
-                : "text-[#9da6b9] hover:text-white"
-            }`}
+            className={`rounded-full px-8 py-2 text-sm font-semibold transition-all ${currentMode === "pomodoro" || currentMode === "paused"
+              ? "bg-primary text-white shadow-lg shadow-blue-900/20"
+              : "text-[#9da6b9] hover:text-white"
+              }`}
             disabled={isRunning}
           >
             Enfoque
           </button>
           <button
             onClick={() => !isRunning && switchMode("break")}
-            className={`rounded-full px-8 py-2 text-sm font-medium transition-all ${
-              currentMode === "break"
-                ? "bg-primary text-white shadow-lg shadow-blue-900/20"
-                : "text-[#9da6b9] hover:text-white"
-            }`}
+            className={`rounded-full px-8 py-2 text-sm font-medium transition-all ${currentMode === "break"
+              ? "bg-primary text-white shadow-lg shadow-blue-900/20"
+              : "text-[#9da6b9] hover:text-white"
+              }`}
             disabled={isRunning}
           >
             Descanso
@@ -318,16 +324,15 @@ export const Pomodoro = () => {
                 {/* Play/Pause Button */}
                 <button
                   onClick={handlePlayPause}
-                  className={`flex-1 h-16 text-white rounded-xl text-xl font-bold shadow-lg transition-all flex items-center justify-center gap-2 group active:scale-95 ${
-                    currentMode === "break"
-                      ? "bg-emerald-500 hover:bg-emerald-600 shadow-emerald-900/30"
-                      : "bg-primary hover:bg-blue-600 shadow-blue-900/30"
-                  }`}
+                  className={`flex-1 h-16 text-white rounded-xl text-xl font-bold shadow-lg transition-all flex items-center justify-center gap-2 group active:scale-95 ${currentMode === "break"
+                    ? "bg-emerald-500 hover:bg-emerald-600 shadow-emerald-900/30"
+                    : "bg-primary hover:bg-blue-600 shadow-blue-900/30"
+                    }`}
                 >
                   <span className="material-symbols-outlined text-[32px] group-hover:scale-110 transition-transform">
-                    {isRunning ? "pause" : "play_arrow"}
+                    {isRunning ? "pause" : isPaused ? "play_arrow" : "play_arrow"}
                   </span>
-                  {isRunning ? "Pausar" : "Iniciar"}
+                  {isRunning ? "Pausar" : isPaused ? "Continuar" : "Iniciar"}
                 </button>
 
                 {/* Minimize Button */}

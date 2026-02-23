@@ -611,19 +611,6 @@ export const CalendarGrid = () => {
         </div>
 
         <div className="flex items-center gap-3">
-          {/* View switcher */}
-          <div className="flex bg-cal-border rounded-lg p-1">
-            <button className="px-3 py-1.5 text-sm font-medium text-gray-400 rounded-md hover:text-white transition-colors">
-              Día
-            </button>
-            <button className="px-3 py-1.5 text-sm font-medium text-white bg-cal-primary rounded-md">
-              Semana
-            </button>
-            <button className="px-3 py-1.5 text-sm font-medium text-gray-400 rounded-md hover:text-white transition-colors">
-              Mes
-            </button>
-          </div>
-
           {/* New Event Button */}
           <button
             onClick={() => setIsCreatingBlock(true)}

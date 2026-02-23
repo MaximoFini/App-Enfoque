@@ -12,7 +12,6 @@ export const TaskItem = ({ task, level = 0 }: TaskItemProps) => {
     openEditModal,
     openCreateModal,
     getSubtasks,
-    toggleTaskExpanded,
   } = useTasksStore();
 
   const subtasks = getSubtasks(task.id);
@@ -35,10 +34,6 @@ export const TaskItem = ({ task, level = 0 }: TaskItemProps) => {
     openCreateModal(task.category_id, task.id);
   };
 
-  const handleToggleExpand = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    toggleTaskExpanded(task.id);
-  };
 
   if (task.completed) {
     return (
@@ -62,30 +57,14 @@ export const TaskItem = ({ task, level = 0 }: TaskItemProps) => {
         onMouseLeave={() => setIsHovered(false)}
         onClick={handleClick}
       >
-        {/* Expand/collapse button for tasks with subtasks */}
-        {hasSubtasks ? (
-          <button
-            onClick={handleToggleExpand}
-            className="text-gray-400 hover:text-white transition-colors mt-0.5"
-          >
-            <span
-              className={`material-symbols-outlined text-[16px] transition-transform ${
-                task.isExpanded ? "rotate-90" : ""
-              }`}
-            >
-              arrow_right
-            </span>
-          </button>
-        ) : (
-          <div className="w-4" />
-        )}
+        {/* Indent spacer for alignment */}
+        <div className="w-4" />
 
         {/* Checkbox */}
         <button onClick={handleToggle} className="mt-0.5 shrink-0">
           <span
-            className={`material-symbols-outlined text-[20px] cursor-pointer hover:text-white transition-colors ${
-              level > 0 ? "text-[16px]" : "text-[20px]"
-            } text-gray-400`}
+            className={`material-symbols-outlined text-[20px] cursor-pointer hover:text-white transition-colors ${level > 0 ? "text-[16px]" : "text-[20px]"
+              } text-gray-400`}
           >
             radio_button_unchecked
           </span>
@@ -126,8 +105,8 @@ export const TaskItem = ({ task, level = 0 }: TaskItemProps) => {
         )}
       </div>
 
-      {/* Render subtasks recursively */}
-      {hasSubtasks && task.isExpanded && (
+      {/* Render subtasks recursively — always visible */}
+      {hasSubtasks && (
         <div className="ml-2">
           {subtasks.map((subtask) => (
             <TaskItem key={subtask.id} task={subtask} level={level + 1} />

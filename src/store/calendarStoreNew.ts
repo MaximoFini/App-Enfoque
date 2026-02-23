@@ -83,11 +83,21 @@ interface CalendarState {
   getBlocksForWeek: () => Map<string, TimeBlock[]>;
 }
 
+// Valid BlockColor values
+const VALID_COLORS: BlockColor[] = ["blue", "red", "yellow", "pink", "orange", "gray"];
+
 // Convert DB block to TimeBlock
 const dbBlockToTimeBlock = (dbBlock: CalendarBlock): TimeBlock => {
   // Parse as UTC timestamps and convert to local time
   const startDate = new Date(dbBlock.start_time);
   const endDate = new Date(dbBlock.end_time);
+
+  // Sanear el color: solo aceptar valores válidos del enum BlockColor
+  const rawColor = dbBlock.color as string | null | undefined;
+  const safeColor: BlockColor | undefined =
+    rawColor && VALID_COLORS.includes(rawColor as BlockColor)
+      ? (rawColor as BlockColor)
+      : undefined;
 
   return {
     id: dbBlock.id,
@@ -101,7 +111,7 @@ const dbBlockToTimeBlock = (dbBlock: CalendarBlock): TimeBlock => {
         : dbBlock.type === "shallow"
           ? "shallow-work"
           : "other",
-    color: dbBlock.color as BlockColor | undefined,
+    color: safeColor,
     categoryId: dbBlock.category_id,
     completed: false,
     createdAt: dbBlock.created_at,
@@ -115,7 +125,12 @@ const timeBlockToDbBlock = (
 ) => {
   // Create Date objects in local timezone
   const startDate = new Date(`${block.date}T${block.startTime}:00`);
-  const endDate = new Date(`${block.date}T${block.endTime}:00`);
+  let endDate = new Date(`${block.date}T${block.endTime}:00`);
+
+  // Si el fin es anterior o igual al inicio, el bloque cruza medianoche → +1 día
+  if (endDate <= startDate) {
+    endDate = new Date(endDate.getTime() + 24 * 60 * 60 * 1000);
+  }
 
   // Convert to ISO string (UTC) for database storage
   const startDateTime = startDate.toISOString();
@@ -248,7 +263,11 @@ export const useCalendarStore = create<CalendarState>((set, get) => ({
           const endTime = updates.endTime || block.endTime;
           // Create Date objects in local timezone and convert to ISO (UTC) for DB
           const startDate = new Date(`${date}T${startTime}:00`);
-          const endDate = new Date(`${date}T${endTime}:00`);
+          let endDate = new Date(`${date}T${endTime}:00`);
+          // Si el bloque cruza medianoche, añadir un día al fin
+          if (endDate <= startDate) {
+            endDate = new Date(endDate.getTime() + 24 * 60 * 60 * 1000);
+          }
           dbUpdates.start_time = startDate.toISOString();
           dbUpdates.end_time = endDate.toISOString();
         }
@@ -384,7 +403,7 @@ export const getBlockStyles = (type: BlockType, color?: BlockColor) => {
     },
   };
 
-  return colorMap[color || "blue"];
+  return colorMap[color as BlockColor] ?? colorMap["blue"];
 };
 
 // Height per hour in pixels (must match CalendarGrid)
@@ -396,7 +415,13 @@ export const calculateBlockPosition = (startTime: string, endTime: string) => {
   const [endHour, endMin] = endTime.split(":").map(Number);
 
   const startMinutes = startHour * 60 + startMin;
-  const endMinutes = endHour * 60 + endMin;
+  let endMinutes = endHour * 60 + endMin;
+
+  // Si el bloque cruza medianoche, sumar 24 horas al fin
+  if (endMinutes <= startMinutes) {
+    endMinutes += 24 * 60;
+  }
+
   const duration = endMinutes - startMinutes;
 
   // Scale to HOUR_HEIGHT per hour (HOUR_HEIGHT / 60 per minute)

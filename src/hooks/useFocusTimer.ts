@@ -75,8 +75,25 @@ export const useFocusTimer = () => {
   }, [globalTimer.resume]);
 
   const stop = useCallback(async () => {
-    // Guardar sesión si hay tiempo transcurrido
-    // TODO: Integrar guardado con supabase directamente aquí si es necesario
+    const currentGlobalTimer = useGlobalTimerStore.getState();
+
+    // Sincronizar datos del globalTimer al focusStore antes de guardar
+    if (currentGlobalTimer.timeElapsedMs > 0) {
+      useFocusStore.setState({
+        distractionsCount: currentGlobalTimer.distractionsCount,
+        timeElapsed: Math.floor(currentGlobalTimer.timeElapsedMs / 1000),
+        sessionStartTime: currentGlobalTimer.sessionStartTime
+          ? new Date(currentGlobalTimer.sessionStartTime)
+          : new Date(),
+        focusType: currentGlobalTimer.focusConfig.focusType,
+        durationMinutes: Math.round(
+          currentGlobalTimer.focusConfig.durationMs / 60000,
+        ),
+      });
+      // Guardar sesión en Supabase
+      await useFocusStore.getState().saveSession();
+    }
+
     globalTimer.stop();
   }, [globalTimer]);
 
