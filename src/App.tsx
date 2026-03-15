@@ -14,7 +14,7 @@ import { NotFound } from "./pages/NotFound";
 
 function App() {
   return (
-    <div className="min-h-screen dark">
+    <div className="h-screen dark">
       <Routes>
         {/* Public routes */}
         <Route path="/login" element={<Login />} />
