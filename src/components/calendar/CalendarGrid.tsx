@@ -109,27 +109,6 @@ const TimeBlockItem = ({
   const displayStart = isContinuation ? "00:00" : block.startTime;
   const { top, height } = calculateBlockPosition(displayStart, displayEnd);
   const styles = getBlockStyles(block.type, block.color);
-  const [isHoveringBottom, setIsHoveringBottom] = useState(false);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    setIsHoveringBottom(rect.bottom - e.clientY < 16);
-  };
-
-  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.button !== 0) return;
-    if (isContinuation) return; // continuation blocks are read-only for drag/resize
-    if (isHoveringBottom) {
-      e.stopPropagation();
-      e.preventDefault();
-      onResizeStart(block, e);
-    } else {
-      e.stopPropagation();
-      const rect = e.currentTarget.getBoundingClientRect();
-      const offsetMinutes = Math.round(((e.clientY - rect.top) / HOUR_HEIGHT) * 60);
-      onDragStart(block, offsetMinutes, e);
-    }
-  };
 
   const handleContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -137,43 +116,84 @@ const TimeBlockItem = ({
     onCopy(block);
   };
 
+  // Drag handle: top bar — clicking it starts drag, does NOT open modal
+  const handleDragHandleMouseDown = (e: React.MouseEvent) => {
+    if (e.button !== 0 || isContinuation) return;
+    e.stopPropagation();
+    e.preventDefault();
+    const offsetMinutes = 0; // drag from the very top of the block
+    onDragStart(block, offsetMinutes, e);
+  };
+
+  // Resize handle: bottom bar — always resize, never edit
+  const handleResizeMouseDown = (e: React.MouseEvent) => {
+    if (e.button !== 0 || isContinuation) return;
+    e.stopPropagation();
+    e.preventDefault();
+    onResizeStart(block, e);
+  };
+
+  // Body click → open edit modal (only when not currently dragging/resizing)
+  const handleBodyClick = (e: React.MouseEvent) => {
+    if (isDragging) return;
+    e.stopPropagation();
+    onClick();
+  };
+
   return (
     <div
-      className={`absolute left-1 right-1 rounded-md border-l-4 px-2 py-1 group select-none
-        ${styles.bg} ${styles.border} overflow-hidden transition-opacity
-        ${isDragging ? "opacity-25 pointer-events-none" : "hover:opacity-80"}
-        ${isContinuation ? "border-dashed opacity-60" : ""}
-        ${isHoveringBottom && !isContinuation ? "cursor-ns-resize" : isContinuation ? "cursor-default" : "cursor-move"}`}
+      className={`absolute left-1 right-1 rounded-md border-l-4 group select-none
+        ${styles.bg} ${styles.border} overflow-hidden
+        ${isDragging ? "opacity-25 pointer-events-none" : ""}
+        ${isContinuation ? "border-dashed opacity-60" : ""}`}
       style={{ top: `${top}px`, height: `${height}px`, minHeight: "20px", zIndex: 10 }}
-      onClick={(e) => {
-        if (!isDragging) { e.stopPropagation(); onClick(); }
-      }}
-      onMouseMove={handleMouseMove}
-      onMouseDown={handleMouseDown}
-      onMouseLeave={() => setIsHoveringBottom(false)}
       onContextMenu={handleContextMenu}
-      tabIndex={0}
     >
-      {/* Resize handle */}
+      {/* Drag handle — top strip, cursor-move */}
       {!isContinuation && (
         <div
-          className={`absolute bottom-0 left-0 right-0 h-3 flex items-center justify-center transition-opacity
-            ${isHoveringBottom ? "opacity-100" : "opacity-0 group-hover:opacity-50"}`}
+          className="absolute top-0 left-0 right-0 h-4 cursor-move flex items-center justify-center z-20 opacity-0 group-hover:opacity-100 transition-opacity"
+          onMouseDown={handleDragHandleMouseDown}
+          title="Arrastrar"
         >
-          <div className="w-8 h-1 bg-white/40 rounded-full" />
+          <div className="flex gap-[3px]">
+            <div className="w-[3px] h-[3px] rounded-full bg-white/60" />
+            <div className="w-[3px] h-[3px] rounded-full bg-white/60" />
+            <div className="w-[3px] h-[3px] rounded-full bg-white/60" />
+            <div className="w-[3px] h-[3px] rounded-full bg-white/60" />
+            <div className="w-[3px] h-[3px] rounded-full bg-white/60" />
+            <div className="w-[3px] h-[3px] rounded-full bg-white/60" />
+          </div>
         </div>
       )}
 
-      {/* Continuation indicator */}
-      {isContinuation && (
-        <div className="absolute top-0 left-0 right-0 h-1 bg-white/20 rounded-t" />
-      )}
+      {/* Body — click opens modal */}
+      <div
+        className="absolute inset-0 px-2 py-1 cursor-pointer hover:opacity-80 transition-opacity"
+        style={{ top: isContinuation ? "0px" : "0px" }}
+        onClick={handleBodyClick}
+      >
+        {/* Continuation indicator */}
+        {isContinuation && (
+          <div className="absolute top-0 left-0 right-0 h-1 bg-white/20 rounded-t" />
+        )}
+        <p className={`text-xs font-medium truncate mt-4 ${styles.text}`}>{block.title}</p>
+        {height >= 40 && (
+          <p className="text-[10px] text-gray-400 truncate">
+            {isContinuation ? "00:00" : block.startTime} – {displayEnd}
+          </p>
+        )}
+      </div>
 
-      <p className={`text-xs font-medium truncate ${styles.text}`}>{block.title}</p>
-      {height >= 40 && (
-        <p className="text-[10px] text-gray-400 truncate">
-          {isContinuation ? "00:00" : block.startTime} – {displayEnd}
-        </p>
+      {/* Resize handle — bottom strip */}
+      {!isContinuation && (
+        <div
+          className="absolute bottom-0 left-0 right-0 h-3 cursor-ns-resize flex items-center justify-center z-20 opacity-0 group-hover:opacity-100 transition-opacity"
+          onMouseDown={handleResizeMouseDown}
+          title="Redimensionar"
+        >
+          <div className="w-8 h-1 bg-white/40 rounded-full" />
+        </div>
       )}
     </div>
   );
