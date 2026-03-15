@@ -156,40 +156,32 @@ const TimeBlockItem = ({
       style={{ top: `${top}px`, height: `${height}px`, minHeight: "20px", zIndex: 10, ...styles.inlineStyle }}
       onContextMenu={handleContextMenu}
     >
-      {/* Drag handle — top strip, cursor-move */}
+      {/* Drag handle — left side strip (over the colored border), cursor-move */}
       {!isContinuation && (
         <div
-          className="absolute top-0 left-0 right-0 h-4 cursor-move flex items-center justify-center z-20 opacity-0 group-hover:opacity-100 transition-opacity"
+          className="absolute top-0 left-0 bottom-0 w-4 cursor-move z-20 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-[3px]"
           onMouseDown={handleDragHandleMouseDown}
           title="Arrastrar"
         >
-          <div className="flex gap-[3px]">
-            <div className="w-[3px] h-[3px] rounded-full bg-white/60" />
-            <div className="w-[3px] h-[3px] rounded-full bg-white/60" />
-            <div className="w-[3px] h-[3px] rounded-full bg-white/60" />
-            <div className="w-[3px] h-[3px] rounded-full bg-white/60" />
-            <div className="w-[3px] h-[3px] rounded-full bg-white/60" />
-            <div className="w-[3px] h-[3px] rounded-full bg-white/60" />
-          </div>
+          <div className="w-[3px] h-[3px] rounded-full bg-white/70" />
+          <div className="w-[3px] h-[3px] rounded-full bg-white/70" />
+          <div className="w-[3px] h-[3px] rounded-full bg-white/70" />
+          <div className="w-[3px] h-[3px] rounded-full bg-white/70" />
         </div>
       )}
 
-      {/* Body — click opens modal */}
+      {/* Body — click opens modal, pl-2 to clear the drag handle zone */}
       <div
-        className="absolute inset-0 px-2 py-1 cursor-pointer hover:opacity-80 transition-opacity"
-        style={{ top: isContinuation ? "0px" : "0px" }}
+        className="absolute inset-0 pl-2 pr-2 py-1 cursor-pointer hover:opacity-80 transition-opacity"
         onClick={handleBodyClick}
       >
-        {/* Continuation indicator */}
         {isContinuation && (
           <div className="absolute top-0 left-0 right-0 h-1 bg-white/20 rounded-t" />
         )}
-        <p className={`text-xs font-medium truncate mt-4 ${styles.text}`}>{block.title}</p>
-        {height >= 40 && (
-          <p className="text-[10px] text-gray-400 truncate">
-            {isContinuation ? "00:00" : block.startTime} – {displayEnd}
-          </p>
-        )}
+        <p className={`text-xs font-semibold truncate leading-tight ${styles.text}`}>{block.title}</p>
+        <p className="text-[10px] text-gray-400 truncate leading-tight mt-0.5">
+          {isContinuation ? "00:00" : block.startTime} – {displayEnd}
+        </p>
       </div>
 
       {/* Resize handle — bottom strip */}
