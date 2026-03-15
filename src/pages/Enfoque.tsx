@@ -741,17 +741,7 @@ export const Enfoque = () => {
           </div>
         )}
 
-        {/* Shallow work simple stats */}
-        {!isDeepWork && status === "idle" && (
-          <div className="text-center py-8">
-            <p className={`${themeColors.text} text-lg`}>
-              El modo de trabajo ligero no rastrea distracciones.
-            </p>
-            <p className={`${themeColors.text} text-sm mt-2 opacity-60`}>
-              Ideal para tareas que no requieren concentración profunda.
-            </p>
-          </div>
-        )}
+        {/* Shallow work simple stats - text removed */}
       </div>
     </div>
   );

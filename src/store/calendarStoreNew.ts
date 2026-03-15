@@ -18,6 +18,7 @@ import {
 
 export type BlockType = "deep-work" | "shallow-work" | "other";
 export type BlockColor = "blue" | "red" | "yellow" | "pink" | "orange" | "gray";
+export type { Category };
 
 // TimeBlock interface compatible with local state
 export interface TimeBlock {
@@ -326,6 +327,7 @@ export const useCalendarStore = create<CalendarState>((set, get) => ({
   getBlocksForDate: (date) => {
     const { blocks } = get();
     const dateStr = format(date, "yyyy-MM-dd");
+    // Return blocks that start on this date (multi-day continuations handled by CalendarGrid)
     return blocks.filter((block) => block.date === dateStr);
   },
 
@@ -349,58 +351,48 @@ export const useCalendarStore = create<CalendarState>((set, get) => ({
   },
 }));
 
-// Helper function to get block style based on type
-export const getBlockStyles = (type: BlockType, color?: BlockColor) => {
+// Helper function to get block style based on type.
+// When categoryHex is provided (for "other" blocks with a category), returns
+// inline CSS variables so Tailwind class names are not needed for the color.
+export const getBlockStyles = (
+  type: BlockType,
+  color?: BlockColor,
+  categoryHex?: string,
+): {
+  bg: string;
+  border: string;
+  text: string;
+  inlineStyle?: React.CSSProperties;
+} => {
   if (type === "deep-work") {
-    return {
-      bg: "bg-deep-work/20",
-      border: "border-l-deep-work",
-      text: "text-deep-work",
-    };
+    return { bg: "bg-deep-work/20", border: "border-l-deep-work", text: "text-deep-work" };
   }
   if (type === "shallow-work") {
+    return { bg: "bg-shallow-work/20", border: "border-l-shallow-work", text: "text-shallow-work" };
+  }
+
+  // "other" with a category — use the category hex color via inline styles
+  if (categoryHex) {
     return {
-      bg: "bg-shallow-work/20",
-      border: "border-l-shallow-work",
-      text: "text-shallow-work",
+      bg: "bg-[--block-bg]",
+      border: "border-l-[--block-border]",
+      text: "text-[--block-text]",
+      inlineStyle: {
+        "--block-bg": `${categoryHex}33`,      // 20% opacity
+        "--block-border": categoryHex,
+        "--block-text": categoryHex,
+      } as React.CSSProperties,
     };
   }
 
-  // For 'other' type, use the specified color
-  const colorMap: Record<
-    BlockColor,
-    { bg: string; border: string; text: string }
-  > = {
-    blue: {
-      bg: "bg-block-blue/20",
-      border: "border-l-block-blue",
-      text: "text-block-blue",
-    },
-    red: {
-      bg: "bg-block-red/20",
-      border: "border-l-block-red",
-      text: "text-block-red",
-    },
-    yellow: {
-      bg: "bg-block-yellow/20",
-      border: "border-l-block-yellow",
-      text: "text-block-yellow",
-    },
-    pink: {
-      bg: "bg-block-pink/20",
-      border: "border-l-block-pink",
-      text: "text-block-pink",
-    },
-    orange: {
-      bg: "bg-block-orange/20",
-      border: "border-l-block-orange",
-      text: "text-block-orange",
-    },
-    gray: {
-      bg: "bg-block-gray/20",
-      border: "border-l-block-gray",
-      text: "text-block-gray",
-    },
+  // "other" with a legacy BlockColor enum value
+  const colorMap: Record<BlockColor, { bg: string; border: string; text: string }> = {
+    blue:   { bg: "bg-block-blue/20",   border: "border-l-block-blue",   text: "text-block-blue" },
+    red:    { bg: "bg-block-red/20",    border: "border-l-block-red",    text: "text-block-red" },
+    yellow: { bg: "bg-block-yellow/20", border: "border-l-block-yellow", text: "text-block-yellow" },
+    pink:   { bg: "bg-block-pink/20",   border: "border-l-block-pink",   text: "text-block-pink" },
+    orange: { bg: "bg-block-orange/20", border: "border-l-block-orange", text: "text-block-orange" },
+    gray:   { bg: "bg-block-gray/20",   border: "border-l-block-gray",   text: "text-block-gray" },
   };
 
   return colorMap[color as BlockColor] ?? colorMap["blue"];
@@ -417,16 +409,17 @@ export const calculateBlockPosition = (startTime: string, endTime: string) => {
   const startMinutes = startHour * 60 + startMin;
   let endMinutes = endHour * 60 + endMin;
 
-  // Si el bloque cruza medianoche, sumar 24 horas al fin
-  if (endMinutes <= startMinutes) {
-    endMinutes += 24 * 60;
+  // If block crosses midnight (endTime <= startTime), cap display at end of day
+  if (endMinutes <= startMinutes && startMinutes > 0) {
+    endMinutes = 24 * 60; // render to end of day column
   }
 
+  // If this is a continuation block (startTime = "00:00", endTime is the real end),
+  // endMinutes is already correct
   const duration = endMinutes - startMinutes;
 
-  // Scale to HOUR_HEIGHT per hour (HOUR_HEIGHT / 60 per minute)
   const top = (startMinutes / 60) * HOUR_HEIGHT;
-  const height = Math.max((duration / 60) * HOUR_HEIGHT, 15); // Minimum 15px height
+  const height = Math.max((duration / 60) * HOUR_HEIGHT, 15); // Minimum 15px
 
   return { top, height };
 };

@@ -157,35 +157,12 @@ export const Pomodoro = () => {
   }
 
   return (
-    <main className="flex-1 flex flex-col bg-cal-bg relative overflow-y-auto">
-      <div className="flex-1 flex flex-col items-center justify-center p-6 w-full max-w-6xl mx-auto">
-        {/* Mode Toggle */}
-        <div className="bg-[#1e293b] p-1.5 rounded-full flex items-center mb-10 shadow-lg border border-[#282e39]">
-          <button
-            onClick={() => !isRunning && switchMode("pomodoro")}
-            className={`rounded-full px-8 py-2 text-sm font-semibold transition-all ${currentMode === "pomodoro" || currentMode === "paused"
-              ? "bg-primary text-white shadow-lg shadow-blue-900/20"
-              : "text-[#9da6b9] hover:text-white"
-              }`}
-            disabled={isRunning}
-          >
-            Enfoque
-          </button>
-          <button
-            onClick={() => !isRunning && switchMode("break")}
-            className={`rounded-full px-8 py-2 text-sm font-medium transition-all ${currentMode === "break"
-              ? "bg-primary text-white shadow-lg shadow-blue-900/20"
-              : "text-[#9da6b9] hover:text-white"
-              }`}
-            disabled={isRunning}
-          >
-            Descanso
-          </button>
-        </div>
-
-        <div className="flex flex-col lg:flex-row gap-12 w-full items-center justify-center">
-          {/* Left Panel - Stats and Settings */}
-          <div className="w-full lg:w-1/4 flex flex-col gap-6 order-2 lg:order-1">
+    <main className="flex-1 flex flex-col bg-cal-bg relative overflow-y-auto min-h-screen">
+      <div className="flex-1 flex flex-col items-center justify-center p-6 w-full">
+        {/* Main Layout Container */}
+        <div className="flex flex-col lg:grid lg:grid-cols-12 gap-8 w-full items-start justify-center max-w-7xl mx-auto px-4">
+          {/* Left Panel - Stats and Settings (Column 1-3) */}
+          <div className="w-full lg:col-span-3 flex flex-col gap-6 order-2 lg:order-1 lg:min-h-0">
             {/* Total Time Card */}
             <div className="bg-[#1e293b] p-6 rounded-2xl border border-[#282e39] shadow-sm">
               <div className="flex items-center gap-2 mb-2 text-[#9da6b9]">
@@ -268,8 +245,32 @@ export const Pomodoro = () => {
             </div>
           </div>
 
-          {/* Center - Timer */}
-          <div className="w-full lg:w-2/3 flex flex-col items-center order-1 lg:order-2">
+          {/* Center - Timer Section (Column 4-9) */}
+          <div className="w-full lg:col-span-6 flex flex-col items-center order-1 lg:order-2 lg:min-h-0">
+            {/* Mode Toggle - Positioned above timer */}
+            <div className="bg-[#1e293b] p-1.5 rounded-full flex items-center mb-8 shadow-lg border border-[#282e39] self-center">
+              <button
+                onClick={() => !isRunning && switchMode("pomodoro")}
+                className={`rounded-full px-8 py-2 text-sm font-semibold transition-all ${currentMode === "pomodoro" || currentMode === "paused"
+                  ? "bg-primary text-white shadow-lg shadow-blue-900/20"
+                  : "text-[#9da6b9] hover:text-white"
+                  }`}
+                disabled={isRunning}
+              >
+                Enfoque
+              </button>
+              <button
+                onClick={() => !isRunning && switchMode("break")}
+                className={`rounded-full px-8 py-2 text-sm font-medium transition-all ${currentMode === "break"
+                  ? "bg-primary text-white shadow-lg shadow-blue-900/20"
+                  : "text-[#9da6b9] hover:text-white"
+                  }`}
+                disabled={isRunning}
+              >
+                Descanso
+              </button>
+            </div>
+
             {/* Circular Timer */}
             <div className="relative size-[380px] md:size-[440px] flex items-center justify-center mb-10">
               <svg

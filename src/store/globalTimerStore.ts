@@ -182,11 +182,16 @@ export const useGlobalTimerStore = create<TimerState>()(
       const state = get();
       if (state.status !== "idle" && state.activeTimer === "pomodoro") return;
 
+      const durationMs = minutes * 60 * 1000;
       set({
         pomodoroConfig: {
           ...state.pomodoroConfig,
-          workDurationMs: minutes * 60 * 1000,
+          workDurationMs: durationMs,
         },
+        // Update timeRemaining if currently in work mode to reflect new duration in real-time
+        ...(state.activeTimer === "pomodoro" && state.pomodoroMode === "work" && state.status === "idle" 
+          ? { timeRemainingMs: durationMs } 
+          : {}),
       });
     },
 
@@ -194,11 +199,16 @@ export const useGlobalTimerStore = create<TimerState>()(
       const state = get();
       if (state.status !== "idle" && state.activeTimer === "pomodoro") return;
 
+      const durationMs = minutes * 60 * 1000;
       set({
         pomodoroConfig: {
           ...state.pomodoroConfig,
-          breakDurationMs: minutes * 60 * 1000,
+          breakDurationMs: durationMs,
         },
+        // Update timeRemaining if currently in break mode to reflect new duration in real-time
+        ...(state.activeTimer === "pomodoro" && state.pomodoroMode === "break" && state.status === "idle" 
+          ? { timeRemainingMs: durationMs } 
+          : {}),
       });
     },
 
@@ -228,11 +238,15 @@ export const useGlobalTimerStore = create<TimerState>()(
       if (state.status !== "idle") return;
 
       const clampedMinutes = Math.max(15, Math.min(180, minutes));
+      const durationMs = clampedMinutes * 60 * 1000;
+      
       set({
         focusConfig: {
           ...state.focusConfig,
-          durationMs: clampedMinutes * 60 * 1000,
+          durationMs: durationMs,
         },
+        // Update timeRemaining to reflect new duration in real-time
+        timeRemainingMs: durationMs,
       });
     },
 
