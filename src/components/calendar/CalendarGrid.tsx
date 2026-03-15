@@ -356,14 +356,22 @@ export const CalendarGrid = () => {
 
   const currentMonthYear = format(currentDate, "MMMM yyyy", { locale: es });
 
-  // Scroll to 7am on mount — use rAF to ensure layout is painted before scrolling
+  // Scroll to 7am on mount — double rAF ensures the flex layout has painted
+  // and the container has a real height before we assign scrollTop.
   useEffect(() => {
-    const raf = requestAnimationFrame(() => {
-      if (gridRef.current) {
-        gridRef.current.scrollTop = DEFAULT_START_HOUR * HOUR_HEIGHT;
-      }
+    let raf1: number;
+    let raf2: number;
+    raf1 = requestAnimationFrame(() => {
+      raf2 = requestAnimationFrame(() => {
+        if (gridRef.current) {
+          gridRef.current.scrollTop = DEFAULT_START_HOUR * HOUR_HEIGHT;
+        }
+      });
     });
-    return () => cancelAnimationFrame(raf);
+    return () => {
+      cancelAnimationFrame(raf1);
+      cancelAnimationFrame(raf2);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
