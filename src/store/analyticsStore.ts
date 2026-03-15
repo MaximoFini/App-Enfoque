@@ -1,8 +1,8 @@
 import { create } from "zustand";
 import { supabase } from "../lib/supabase";
 import {
-  startOfMonth, endOfMonth, startOfWeek, endOfWeek,
-  format, eachWeekOfInterval, addWeeks, parseISO,
+  startOfMonth, endOfMonth, endOfWeek,
+  format, eachWeekOfInterval, parseISO,
 } from "date-fns";
 import { es } from "date-fns/locale";
 
