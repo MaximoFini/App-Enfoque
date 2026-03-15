@@ -157,10 +157,10 @@ export const Pomodoro = () => {
   }
 
   return (
-    <main className="flex-1 flex flex-col bg-cal-bg relative overflow-y-auto">
-      <div className="flex-1 flex flex-col items-center justify-center p-6 w-full max-w-6xl mx-auto">
+    <main className="flex-1 flex flex-col bg-cal-bg relative overflow-y-auto min-h-screen">
+      <div className="flex-1 flex flex-col items-center justify-center p-6 w-full">
         {/* Mode Toggle */}
-        <div className="bg-[#1e293b] p-1.5 rounded-full flex items-center mb-10 shadow-lg border border-[#282e39]">
+        <div className="bg-[#1e293b] p-1.5 rounded-full flex items-center mb-8 shadow-lg border border-[#282e39]">
           <button
             onClick={() => !isRunning && switchMode("pomodoro")}
             className={`rounded-full px-8 py-2 text-sm font-semibold transition-all ${currentMode === "pomodoro" || currentMode === "paused"
@@ -183,9 +183,9 @@ export const Pomodoro = () => {
           </button>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-12 w-full items-center justify-center">
+        <div className="flex flex-col lg:flex-row gap-8 w-full items-stretch justify-center max-w-7xl mx-auto px-4">
           {/* Left Panel - Stats and Settings */}
-          <div className="w-full lg:w-1/4 flex flex-col gap-6 order-2 lg:order-1">
+          <div className="w-full lg:w-1/4 flex flex-col gap-6 order-2 lg:order-1 lg:min-h-0">
             {/* Total Time Card */}
             <div className="bg-[#1e293b] p-6 rounded-2xl border border-[#282e39] shadow-sm">
               <div className="flex items-center gap-2 mb-2 text-[#9da6b9]">
@@ -269,7 +269,7 @@ export const Pomodoro = () => {
           </div>
 
           {/* Center - Timer */}
-          <div className="w-full lg:w-2/3 flex flex-col items-center order-1 lg:order-2">
+          <div className="w-full lg:w-2/3 flex flex-col items-center order-1 lg:order-2 lg:min-h-0">
             {/* Circular Timer */}
             <div className="relative size-[380px] md:size-[440px] flex items-center justify-center mb-10">
               <svg
