@@ -326,6 +326,7 @@ export const useCalendarStore = create<CalendarState>((set, get) => ({
   getBlocksForDate: (date) => {
     const { blocks } = get();
     const dateStr = format(date, "yyyy-MM-dd");
+    // Return blocks that start on this date (multi-day continuations handled by CalendarGrid)
     return blocks.filter((block) => block.date === dateStr);
   },
 
@@ -417,16 +418,17 @@ export const calculateBlockPosition = (startTime: string, endTime: string) => {
   const startMinutes = startHour * 60 + startMin;
   let endMinutes = endHour * 60 + endMin;
 
-  // Si el bloque cruza medianoche, sumar 24 horas al fin
-  if (endMinutes <= startMinutes) {
-    endMinutes += 24 * 60;
+  // If block crosses midnight (endTime <= startTime), cap display at end of day
+  if (endMinutes <= startMinutes && startMinutes > 0) {
+    endMinutes = 24 * 60; // render to end of day column
   }
 
+  // If this is a continuation block (startTime = "00:00", endTime is the real end),
+  // endMinutes is already correct
   const duration = endMinutes - startMinutes;
 
-  // Scale to HOUR_HEIGHT per hour (HOUR_HEIGHT / 60 per minute)
   const top = (startMinutes / 60) * HOUR_HEIGHT;
-  const height = Math.max((duration / 60) * HOUR_HEIGHT, 15); // Minimum 15px height
+  const height = Math.max((duration / 60) * HOUR_HEIGHT, 15); // Minimum 15px
 
   return { top, height };
 };
