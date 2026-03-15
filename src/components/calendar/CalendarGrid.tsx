@@ -6,6 +6,7 @@ import {
   getBlockStyles,
   calculateBlockPosition,
   TimeBlock,
+  Category,
 } from "../../store/calendarStoreNew";
 import { BlockModal } from "./BlockModal";
 
@@ -84,6 +85,7 @@ const CurrentTimeLine = () => {
 // Single time block component
 interface TimeBlockItemProps {
   block: TimeBlock;
+  categories: Category[];
   isDragging?: boolean;
   isResizing?: boolean;
   resizePreviewEnd?: string;
@@ -96,6 +98,7 @@ interface TimeBlockItemProps {
 
 const TimeBlockItem = ({
   block,
+  categories,
   isDragging,
   isResizing,
   resizePreviewEnd,
@@ -108,7 +111,11 @@ const TimeBlockItem = ({
   const displayEnd = isResizing && resizePreviewEnd ? resizePreviewEnd : block.endTime;
   const displayStart = isContinuation ? "00:00" : block.startTime;
   const { top, height } = calculateBlockPosition(displayStart, displayEnd);
-  const styles = getBlockStyles(block.type, block.color);
+  // Resolve category hex color for "other" blocks that have a categoryId
+  const categoryHex = block.type === "other" && block.categoryId
+    ? categories.find((c) => c.id === block.categoryId)?.color
+    : undefined;
+  const styles = getBlockStyles(block.type, block.color, categoryHex);
 
   const handleContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -146,7 +153,7 @@ const TimeBlockItem = ({
         ${styles.bg} ${styles.border} overflow-hidden
         ${isDragging ? "opacity-25 pointer-events-none" : ""}
         ${isContinuation ? "border-dashed opacity-60" : ""}`}
-      style={{ top: `${top}px`, height: `${height}px`, minHeight: "20px", zIndex: 10 }}
+      style={{ top: `${top}px`, height: `${height}px`, minHeight: "20px", zIndex: 10, ...styles.inlineStyle }}
       onContextMenu={handleContextMenu}
     >
       {/* Drag handle — top strip, cursor-move */}
@@ -204,6 +211,7 @@ interface DayColumnProps {
   date: Date;
   blocks: TimeBlock[];
   continuationBlocks: TimeBlock[];
+  categories: Category[];
   isToday: boolean;
   dragOverHour: number | null;
   isDragOver: boolean;
@@ -219,7 +227,7 @@ interface DayColumnProps {
 }
 
 const DayColumn = ({
-  date, blocks, continuationBlocks, isToday, dragOverHour, isDragOver,
+  date, blocks, continuationBlocks, categories, isToday, dragOverHour, isDragOver,
   draggingBlock, resizingBlock, resizePreviewEnd,
   onTimeSlotClick, onBlockClick, onCopy, onPaste, onDragStart, onResizeStart,
 }: DayColumnProps) => {
@@ -250,6 +258,7 @@ const DayColumn = ({
         <TimeBlockItem
           key={block.id}
           block={block}
+          categories={categories}
           isDragging={draggingBlock?.id === block.id}
           isResizing={resizingBlock?.id === block.id}
           resizePreviewEnd={resizingBlock?.id === block.id ? resizePreviewEnd : undefined}
@@ -265,6 +274,7 @@ const DayColumn = ({
         <TimeBlockItem
           key={`cont-${block.id}`}
           block={block}
+          categories={categories}
           isContinuation
           onClick={() => onBlockClick(block)}
           onCopy={onCopy}
@@ -285,7 +295,7 @@ export const CalendarGrid = () => {
     currentDate, goToNextWeek, goToPrevWeek, goToToday,
     getBlocksForDate, isCreatingBlock, setIsCreatingBlock,
     editingBlockId, setEditingBlockId, selectedDate, setSelectedDate,
-    blocks, fetchBlocks, addBlock, updateBlock,
+    blocks, fetchBlocks, addBlock, updateBlock, categories, fetchCategories,
   } = useCalendarStore();
 
   const [selectedHour, setSelectedHour] = useState<number | undefined>(undefined);
@@ -329,7 +339,7 @@ export const CalendarGrid = () => {
   useEffect(() => { resizeOriginalEndRef.current = resizeOriginalEnd; }, [resizeOriginalEnd]);
   useEffect(() => { blocksRef.current = blocks; }, [blocks]);
 
-  useEffect(() => { fetchBlocks(); }, [fetchBlocks]);
+  useEffect(() => { fetchBlocks(); fetchCategories(); }, [fetchBlocks, fetchCategories]);
 
   useEffect(() => {
     if (editingBlockId) {
@@ -737,6 +747,7 @@ export const CalendarGrid = () => {
                 date={date}
                 blocks={getBlocksForDate(date)}
                 continuationBlocks={getContinuationBlocks(date)}
+                categories={categories}
                 isToday={isToday}
                 dragOverHour={isDragOver ? dragOverHour : null}
                 isDragOver={isDragOver}
