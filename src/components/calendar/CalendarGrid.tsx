@@ -13,10 +13,10 @@ import { BlockModal } from "./BlockModal";
 // Hours array from 0 to 23
 const HOURS = Array.from({ length: 24 }, (_, i) => i);
 
-// Height per hour in pixels — sized so 16h (7AM–11PM) fill ~1024px viewport
-const HOUR_HEIGHT = 64;
+// Height per hour in pixels
+const HOUR_HEIGHT = 40;
 
-// Default visible range: scroll to 7AM on mount
+// Default visible range
 const DEFAULT_START_HOUR = 7;
 
 // Minimum block size in minutes
@@ -356,22 +356,11 @@ export const CalendarGrid = () => {
 
   const currentMonthYear = format(currentDate, "MMMM yyyy", { locale: es });
 
-  // Scroll to 7am on mount — double rAF ensures the flex layout has painted
-  // and the container has a real height before we assign scrollTop.
+  // Scroll to 7am on mount
   useEffect(() => {
-    let raf1: number;
-    let raf2: number;
-    raf1 = requestAnimationFrame(() => {
-      raf2 = requestAnimationFrame(() => {
-        if (gridRef.current) {
-          gridRef.current.scrollTop = DEFAULT_START_HOUR * HOUR_HEIGHT;
-        }
-      });
-    });
-    return () => {
-      cancelAnimationFrame(raf1);
-      cancelAnimationFrame(raf2);
-    };
+    if (gridRef.current) {
+      gridRef.current.scrollTop = DEFAULT_START_HOUR * HOUR_HEIGHT;
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -634,7 +623,7 @@ export const CalendarGrid = () => {
   };
 
   return (
-    <div className="flex flex-col h-full relative min-h-0">
+    <div className="flex flex-col h-full relative">
       {/* Toast notification */}
       {toast && (
         <div
@@ -726,7 +715,7 @@ export const CalendarGrid = () => {
       </div>
 
       {/* Scrollable grid area */}
-      <div ref={gridRef} className="flex-1 overflow-auto relative min-h-0">
+      <div ref={gridRef} className="flex-1 overflow-auto relative">
         <div className="flex" style={{ height: `${24 * HOUR_HEIGHT}px` }}>
           {/* Time labels */}
           <div className="w-16 shrink-0 relative">
