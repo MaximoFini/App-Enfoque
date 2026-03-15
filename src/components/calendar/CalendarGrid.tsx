@@ -13,10 +13,10 @@ import { BlockModal } from "./BlockModal";
 // Hours array from 0 to 23
 const HOURS = Array.from({ length: 24 }, (_, i) => i);
 
-// Height per hour in pixels
-const HOUR_HEIGHT = 40;
+// Height per hour in pixels — sized so 16h (7AM–11PM) fill ~1024px viewport
+const HOUR_HEIGHT = 64;
 
-// Default visible range
+// Default visible range: scroll to 7AM on mount
 const DEFAULT_START_HOUR = 7;
 
 // Minimum block size in minutes

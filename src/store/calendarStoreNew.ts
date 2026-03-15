@@ -399,7 +399,7 @@ export const getBlockStyles = (
 };
 
 // Height per hour in pixels (must match CalendarGrid)
-const HOUR_HEIGHT = 40;
+const HOUR_HEIGHT = 64;
 
 // Helper to calculate block position and height
 export const calculateBlockPosition = (startTime: string, endTime: string) => {
