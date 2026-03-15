@@ -356,11 +356,14 @@ export const CalendarGrid = () => {
 
   const currentMonthYear = format(currentDate, "MMMM yyyy", { locale: es });
 
-  // Scroll to 7am on mount
+  // Scroll to 7am on mount — use rAF to ensure layout is painted before scrolling
   useEffect(() => {
-    if (gridRef.current) {
-      gridRef.current.scrollTop = DEFAULT_START_HOUR * HOUR_HEIGHT;
-    }
+    const raf = requestAnimationFrame(() => {
+      if (gridRef.current) {
+        gridRef.current.scrollTop = DEFAULT_START_HOUR * HOUR_HEIGHT;
+      }
+    });
+    return () => cancelAnimationFrame(raf);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -623,7 +626,7 @@ export const CalendarGrid = () => {
   };
 
   return (
-    <div className="flex flex-col h-full relative">
+    <div className="flex flex-col h-full relative min-h-0">
       {/* Toast notification */}
       {toast && (
         <div
@@ -715,7 +718,7 @@ export const CalendarGrid = () => {
       </div>
 
       {/* Scrollable grid area */}
-      <div ref={gridRef} className="flex-1 overflow-auto relative">
+      <div ref={gridRef} className="flex-1 overflow-auto relative min-h-0">
         <div className="flex" style={{ height: `${24 * HOUR_HEIGHT}px` }}>
           {/* Time labels */}
           <div className="w-16 shrink-0 relative">
